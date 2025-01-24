@@ -2,20 +2,198 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #f2f6fa;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+@font-face {
+  font-family: Rubik-Light;
+  src: local("Rubik-Light"),
+    url("/fonts/Rubik/Rubik-Light.ttf") format("turetype");
+}
+@font-face {
+  font-family: Rubik-LightItalic;
+  src: local("Rubik-LightItalic"),
+    url("/fonts/Rubik/Rubik-LightItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-Medium;
+  src: local("Rubik-Medium"),
+    url("/fonts/Rubik/Rubik-Medium.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-MediumItalic;
+  src: local("Rubik-MediumItalic"),
+    url("/fonts/Rubik/Rubik-MediumItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-Regular;
+  src: local("Rubik-Regular"),
+    url("/fonts/Rubik/Rubik-Regular.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-Italic;
+  src: local("Rubik-Italic"),
+    url("/fonts/Rubik/Rubik-Italic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-SemiBold;
+  src: local("Rubik-SemiBold"),
+    url("/fonts/Rubik/Rubik-SemiBold.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-SemiBoldItalic;
+  src: local("Rubik-SemiBoldItalic"),
+    url("/fonts/Rubik/Rubik-SemiBoldItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-Bold;
+  src: local("Rubik-Bold"),
+    url("/fonts/Rubik/Rubik-Bold.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-BoldItalic;
+  src: local("Rubik-BoldItalic"),
+    url("/fonts/Rubik/Rubik-BoldItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-ExtraBold;
+  src: local("Rubik-ExtraBold"),
+    url("/fonts/Rubik/Rubik-ExtraBold.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-ExtraBoldItalic;
+  src: local("Rubik-ExtraBoldItalic"),
+    url("/fonts/Rubik/Rubik-ExtraBoldItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-Black;
+  src: local("Rubik-Black"),
+    url("/fonts/Rubik/Rubik-Black.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Rubik-BlackItalic;
+  src: local("Rubik-BlackItalic"),
+    url("/fonts/Rubik/Rubik-BlackItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-Thin;
+  src: local("Urbanist-Thin"),
+    url("/fonts/Urbanist/Urbanist-Thin.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-ThinItalic;
+  src: local("Urbanist-ThinItalic"),
+    url("/fonts/Urbanist/Urbanist-ThinItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-ExtraLight;
+  src: local("Urbanist-ExtraLight"),
+    url("/fonts/Urbanist/Urbanist-ExtraLight.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-ExtraLightItalic;
+  src: local("Urbanist-ExtraLightItalic"),
+    url("/fonts/Urbanist/Urbanist-ExtraLightItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-Light;
+  src: local("Urbanist-Light"),
+    url("/fonts/Urbanist/Urbanist-Light.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-LightItalic;
+  src: local("Urbanist-LightItalic"),
+    url("/fonts/Urbanist/Urbanist-LightItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-Medium;
+  src: local("Urbanist-Medium"),
+    url("/fonts/Urbanist/Urbanist-Medium.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-MediumItalic;
+  src: local("Urbanist-MediumItalic"),
+    url("/fonts/Urbanist/Urbanist-MediumItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-Regular;
+  src: local("Urbanist-Regular"),
+    url("/fonts/Urbanist/Urbanist-Regular.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-Italic;
+  src: local("Urbanist-Italic"),
+    url("/fonts/Urbanist/Urbanist-Italic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-SemiBold;
+  src: local("Urbanist-SemiBold"),
+    url("/fonts/Urbanist/Urbanist-SemiBold.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-SemiBoldItalic;
+  src: local("Urbanist-SemiBoldItalic"),
+    url("/fonts/Urbanist/Urbanist-SemiBoldItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-Bold;
+  src: local("Urbanist-Bold"),
+    url("/fonts/Urbanist/Urbanist-Bold.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-BoldItalic;
+  src: local("Urbanist-BoldItalic"),
+    url("/fonts/Urbanist/Urbanist-BoldItalic.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-ExtraBold;
+  src: local("Urbanist-ExtraBold"),
+    url("/fonts/Urbanist/Urbanist-ExtraBold.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-ExtraBoldItalic;
+  src: local("Urbanist-ExtraBoldItalic"),
+    url("/fonts/Urbanist/Urbanist-ExtraBoldItalic.ttf") format("turetype");
+}
+@font-face {
+  font-family: Urbanist-Black;
+  src: local("Urbanist-Black"),
+    url("/fonts/Urbanist/Urbanist-Black.ttf") format("turetype");
+}
+
+@font-face {
+  font-family: Urbanist-BlackItalic;
+  src: local("Urbanist-BlackItalic"),
+    url("/fonts/Urbanist/Urbanist-BlackItalic.ttf") format("turetype");
 }
