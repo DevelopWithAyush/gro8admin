@@ -3,11 +3,42 @@ import { usePaths } from "@/hooks/user-nav";
 import { DashboardIcon, DownArrowIcon, Logo, UserList } from "@/Icon/SvgIcon";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SideBar = () => {
   const { pathname } = usePaths();
+  const [user, setUser] = useState(false);
+  const [deal, setDeal] = useState(false);
+  const [syndicate, setSyndicate] = useState(false);
+
   console.log(pathname);
+
+  useEffect(() => {
+    if (
+      pathname === "/dashboard/user/registrations" ||
+      pathname === "/dashboard/user/management"
+    ) {
+      setUser(true);
+      setDeal(false);
+      setSyndicate(false);
+    }
+    if (
+      pathname === "/dashboard/startup/startup-list" ||
+      pathname === "/dashboard/startup/deals-list"
+    ) {
+      setDeal(true);
+      setUser(false);
+      setSyndicate(false);
+    }
+    if (
+      pathname === "/dashboard/syndicate/registrations" ||
+      pathname === "/dashboard/syndicate/management"
+    ) {
+      setUser(false);
+      setDeal(false);
+      setSyndicate(true);
+    }
+  }, [pathname]);
 
   return (
     <aside className="hidden md:flex flex-col items-start justify-normal fixed top-0 left-0 bottom-0 bg-[#00173A] w-[175px] px-[4px] py-5 gap-y-[36px] ">
@@ -47,6 +78,7 @@ const SideBar = () => {
           </span>
         </Link>
         <DropDownNavigation
+          active={user}
           title="User List"
           Links={[
             { href: "/dashboard/user/registrations", title: "Registrations" },
@@ -54,6 +86,7 @@ const SideBar = () => {
           ]}
         />
         <DropDownNavigation
+          active={deal}
           title="Startups"
           Links={[
             { href: "/dashboard/startup/startup-list", title: "Startup list" },
@@ -61,10 +94,17 @@ const SideBar = () => {
           ]}
         />
         <DropDownNavigation
+          active={syndicate}
           title="Syndicates"
           Links={[
-            { href: "/page1", title: "Page 1" },
-            { href: "/page2", title: "Page 2" },
+            {
+              href: "/dashboard/syndicates/registrations",
+              title: "Registrations",
+            },
+            {
+              href: "/dashboard/syndicates/active-syndicates",
+              title: "Active Syndicates",
+            },
           ]}
         />
       </div>
@@ -75,6 +115,7 @@ const SideBar = () => {
 export default SideBar;
 
 type DropDownNavigationProps = {
+  active:boolean
   title: string;
   Links: {
     href: string;
@@ -82,11 +123,14 @@ type DropDownNavigationProps = {
   }[];
 };
 
-const DropDownNavigation = ({ title, Links }: DropDownNavigationProps) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+const DropDownNavigation = ({active, title, Links }: DropDownNavigationProps) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(active);
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    if (!active) {
+      
+      setIsDropdownOpen(!isDropdownOpen);
+    }
   };
 
   const { pathname } = usePaths();

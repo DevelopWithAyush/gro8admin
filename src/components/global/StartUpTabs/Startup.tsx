@@ -1,6 +1,6 @@
 import React from "react";
 
-const Startup = () => {
+const  Startup = () => {
   return (
     <div className="w-full">
       <div className="p-5 grid grid-cols-2 items-start justify-normal border-[1px] border-solid border-[#E8E8F1] w-full bg-[#FFF] rounded-[12px] gap-x-5 gap-y-7  ">
