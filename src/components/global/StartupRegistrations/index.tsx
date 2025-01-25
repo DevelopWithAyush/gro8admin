@@ -1,3 +1,4 @@
+"use client";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import StartupTable from "./StartupTable";
@@ -13,9 +14,8 @@ const StartupRegistrations = () => {
           href={"/"}
           className="px-[15px] py-[11px] text-[#000] font-urbanist-semibold_600 text-[16px] flex flex-row  gap-[10px]  "
         >
-          {" "}
-          <span> View all incoming deals</span>{" "}
-          <ChevronRight className="w-[16px] text-[#0061FE]" />{" "}
+          <span> View all incoming deals</span>
+          <ChevronRight className="w-[16px] text-[#0061FE]" />
         </Link>
       </div>
       <StartupTable />

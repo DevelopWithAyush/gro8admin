@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import UserTable from "./UserTable";
 import Link from "next/link";
@@ -15,7 +16,8 @@ const UserRegistrations = () => {
           className="px-[15px] py-[11px] text-[#000] font-urbanist-semibold_600 text-[16px] flex flex-row capitalize gap-[10px]  "
         >
           {" "}
-                  <span>   view all Users</span> <ChevronRight className="w-[16px] text-[#0061FE]" />{" "}
+          <span> view all Users</span>{" "}
+          <ChevronRight className="w-[16px] text-[#0061FE]" />{" "}
         </Link>
       </div>
       <UserTable />

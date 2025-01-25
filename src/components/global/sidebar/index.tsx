@@ -1,10 +1,14 @@
 "use client";
+import { usePaths } from "@/hooks/user-nav";
 import { DashboardIcon, DownArrowIcon, Logo, UserList } from "@/Icon/SvgIcon";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
 
 const SideBar = () => {
+  const { pathname } = usePaths();
+  console.log(pathname);
+
   return (
     <aside className="hidden md:flex flex-col items-start justify-normal fixed top-0 left-0 bottom-0 bg-[#00173A] w-[175px] px-[4px] py-5 gap-y-[36px] ">
       <div className="pt-[5px] pl-[16px] text-white">
@@ -14,28 +18,46 @@ const SideBar = () => {
       <div className="flex flex-col items-start justify-start w-full gap-y-[10px] pl-[13px] ">
         <Link
           href={`/dashboard`}
-          className="flex flex-row items-center justify-start w-full gap-x-[9px] py-[7px] text-white group "
+          className={cn(
+            "flex flex-row items-center justify-start w-full gap-x-[9px] py-[7px] text-white group "
+          )}
         >
-          <div className="p-[6px] rounded-full group-hover:bg-white transition-all duration-100 ease-in-out ">
+          <div
+            className={cn(
+              "p-[6px] rounded-full group-hover:bg-white transition-all duration-100 ease-in-out ",
+              pathname === "/dashboard" && "bg-white"
+            )}
+          >
             {" "}
-            <DashboardIcon className="group-hover:fill-[#00173A] fill-[#8080A9] transition-all duration-100 ease-in-out " />{" "}
+            <DashboardIcon
+              className={cn(
+                "group-hover:fill-[#00173A] fill-[#8080A9] transition-all duration-100 ease-in-out ",
+                pathname === "/dashboard" && "fill-[#00173A]"
+              )}
+            />
           </div>
-          <span className="text-[#8080A9] font-urbanist-regular_400  text-[14px] leading-normal group-hover:text-white group-hover:font-urbanist-semibold_600 transition-all duration-100 ease-in-out ">
+          <span
+            className={cn(
+              "text-[#8080A9] font-urbanist-regular_400  text-[14px] leading-normal group-hover:text-white group-hover:font-urbanist-semibold_600 transition-all duration-100 ease-in-out ",
+              pathname === "/dashboard" &&
+                "font-urbanist-semibold_600 text-white"
+            )}
+          >
             Dashboard
           </span>
         </Link>
         <DropDownNavigation
           title="User List"
           Links={[
-            { href: "/page1", title: "Page 1" },
-            { href: "/page2", title: "Page 2" },
+            { href: "/dashboard/user/registrations", title: "Registrations" },
+            { href: "/dashboard/user/management", title: "Management" },
           ]}
         />
         <DropDownNavigation
           title="Startups"
           Links={[
-            { href: "/page1", title: "Page 1" },
-            { href: "/page2", title: "Page 2" },
+            { href: "/dashboard/startup/startup-list", title: "Startup list" },
+            { href: "/dashboard/startup/deals-list", title: "Deals List" },
           ]}
         />
         <DropDownNavigation
@@ -66,6 +88,8 @@ const DropDownNavigation = ({ title, Links }: DropDownNavigationProps) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const { pathname } = usePaths();
 
   return (
     <>
@@ -119,10 +143,13 @@ const DropDownNavigation = ({ title, Links }: DropDownNavigationProps) => {
             return (
               <li key={link.title}>
                 <Link
-                  className="text-[#8080A9] hover:text-[#FFF] text-[14px] font-urbanist-regular_400 transition-all duration-100 ease-in-out "
+                  className={cn(
+                    "text-[#8080A9] hover:text-[#FFF] text-[14px] font-urbanist-regular_400 transition-all duration-100 ease-in-out ",
+                    pathname === link.href && "text-[#FFF]"
+                  )}
                   href={link.href}
                 >
-                  Page 3
+                  {link.title}
                 </Link>
               </li>
             );

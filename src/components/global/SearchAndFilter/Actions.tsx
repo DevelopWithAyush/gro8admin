@@ -1,0 +1,72 @@
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { ChevronDown } from "lucide-react";
+import React from "react";
+
+type Props = {
+    setActions: React.Dispatch<React.SetStateAction<string | null>>;
+    actions: string | null;
+};
+
+const Actions = ({ setActions, actions }: Props) => {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button
+                    className=" flex 
+        flex-row
+        items-center
+        justify-start
+        border-solid
+        border
+        border-[#D9D9E4]
+        rounded-[8px]
+        p-[10px]
+        text-[16px]
+        leading-5
+        font-rubik-light_300
+        bg-[#D1D1E2]
+        gap-[60px]
+        text-[#57575F]
+        focus:outline-none
+        
+          "
+                >
+                    {actions || "Actions"} <ChevronDown className="w-[16px] text-[#57575F] " />
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-white shadow-lg rounded-lg border border-gray-200 mt-2">
+                <DropdownMenuItem
+                    onClick={() => setActions(null)}
+                    className="px-4 py-2 hover:bg-gray-100  hover:border-nonecursor-pointer text-sm text-gray-700"
+                >
+                    All
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => setActions("Category A")}
+                    className="px-4 py-2 hover:bg-gray-100 hover:border-none cursor-pointer text-sm text-gray-700"
+                >
+                    Category A
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => setActions("Category B")}
+                    className="px-4 py-2 hover:bg-gray-100  hover:border-none cursor-pointer text-sm text-gray-700"
+                >
+                    Category B
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => setActions("Category C")}
+                    className="px-4 py-2 hover:bg-gray-100  hover:border-none cursor-pointer text-sm text-gray-700"
+                >
+                    Category C
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+};
+
+export default Actions;

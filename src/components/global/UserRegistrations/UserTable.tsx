@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 type User = {
   name: string;
@@ -118,9 +119,9 @@ const columns: ColumnDef<User>[] = [
   {
     id: "actions",
     header: "",
-    cell: ({ row }) => (
-      <button
-        onClick={() => alert(`Viewing details for ${row.original.name}`)}
+    cell: () => (
+      <Link
+        href={"/dashboard/user/registrations/1"}
         className=" flex flex-row items-center justify-start gap-2"
       >
         <span className="text-[16px] font-urbanist-semibold_600 ">
@@ -128,7 +129,7 @@ const columns: ColumnDef<User>[] = [
           View User Details
         </span>{" "}
         <ChevronRight className=" text-[#0061FE] w-[16px]" />
-      </button>
+      </Link>
     ),
   },
 ];
