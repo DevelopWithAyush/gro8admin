@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { usePaths } from "@/hooks/user-nav";
 
 type User = {
   name: string;
@@ -70,71 +71,79 @@ const dummyData: User[] = [
   },
 ];
 
-const columns: ColumnDef<User>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "accountType",
-    header: "Account Type",
-    cell: ({ getValue }) => {
-      return (
-        <div className="flex flex-col items-start justify-start">
-          <p
-            className={cn(
-              getValue<string>() === "investor" && "bg-[#6B9CEC]",
-              getValue<string>() === "mentor" && "bg-[#F56D6D]",
-              "px-1 py-[1px] text-[8px] font-bold leading-normal rounded-[8px] flex flex-col items-center justify-center  text-[#FEFEFE] uppercase"
-            )}
-          >
-            {getValue<string>()}
-          </p>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "registrationDate",
-    header: "Registration Date",
-  },
-  {
-    accessorKey: "linkedin",
-    header: "LinkedIn Account",
-    cell: ({ getValue }) => (
-      <a
-        href={getValue<string>()}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-500 hover:underline"
-      >
-        View
-      </a>
-    ),
-  },
-  {
-    accessorKey: "country",
-    header: "Country",
-  },
-  {
-    id: "actions",
-    header: "",
-    cell: () => (
-      <Link
-        href={"/dashboard/startup/startup-list/1"}
-        className=" flex flex-row items-center justify-start gap-2"
-      >
-        <span className="text-[16px] font-urbanist-semibold_600 ">
-          {" "}
-          View User Details
-        </span>{" "}
-        <ChevronRight className=" text-[#0061FE] w-[16px]" />
-      </Link>
-    ),
-  },
-];
-
 const StartupTable: React.FC = () => {
+  const { pathname } = usePaths();
+
+  const columns: ColumnDef<User>[] = [
+    {
+      accessorKey: "name",
+      header: "Name",
+    },
+    {
+      accessorKey: "accountType",
+      header: "Account Type",
+      cell: ({ getValue }) => {
+        return (
+          <div className="flex flex-col items-start justify-start">
+            <p
+              className={cn(
+                getValue<string>() === "investor" && "bg-[#6B9CEC]",
+                getValue<string>() === "mentor" && "bg-[#F56D6D]",
+                "px-1 py-[1px] text-[8px] font-bold leading-normal rounded-[8px] flex flex-col items-center justify-center  text-[#FEFEFE] uppercase"
+              )}
+            >
+              {getValue<string>()}
+            </p>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "registrationDate",
+      header: "Registration Date",
+    },
+    {
+      accessorKey: "linkedin",
+      header: "LinkedIn Account",
+      cell: ({ getValue }) => (
+        <a
+          href={getValue<string>()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          View
+        </a>
+      ),
+    },
+    {
+      accessorKey: "country",
+      header: "Country",
+    },
+    {
+      id: "actions",
+      header: "",
+      cell: () => (
+        <Link
+          href={`${
+            pathname === "/dashboard/startup/startup-list"
+              ? "/dashboard/startup/startup-list/1"
+              : pathname === "/dashboard/startup/deals-list"
+              ? "/dashboard/startup/deals-list/1"
+              : "/dashboard/startup/startup-list/1"
+          }`}
+          className=" flex flex-row items-center justify-start gap-2"
+        >
+          <span className="text-[16px] font-urbanist-semibold_600 ">
+            {" "}
+            View User Details
+          </span>{" "}
+          <ChevronRight className=" text-[#0061FE] w-[16px]" />
+        </Link>
+      ),
+    },
+  ];
+
   const table = useReactTable({
     data: dummyData,
     columns,

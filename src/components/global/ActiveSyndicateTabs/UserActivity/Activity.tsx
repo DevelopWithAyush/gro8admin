@@ -22,7 +22,11 @@ const Post = () => {
             <p className="text-[#000] font-urbanist-semibold_600 text-[14px] leading-[110%] ">
               Red Sun Mountain
             </p>
-            <p className={cn("px-1 py-[1px] rounded-[8px] bg-[#5D8B23] text-[8px] text-[#FFF] ")}>
+            <p
+              className={cn(
+                "px-1 py-[1px] rounded-[8px] bg-[#5D8B23] text-[8px] text-[#FFF] "
+              )}
+            >
               Syndicate
             </p>
           </div>

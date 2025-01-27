@@ -2,43 +2,19 @@
 import { usePaths } from "@/hooks/user-nav";
 import { DashboardIcon, DownArrowIcon, Logo, UserList } from "@/Icon/SvgIcon";
 import { cn } from "@/lib/utils";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const SideBar = () => {
   const { pathname } = usePaths();
-  const [user, setUser] = useState(false);
-  const [deal, setDeal] = useState(false);
-  const [syndicate, setSyndicate] = useState(false);
 
-  console.log(pathname);
 
-  useEffect(() => {
-    if (
-      pathname === "/dashboard/user/registrations" ||
-      pathname === "/dashboard/user/management"
-    ) {
-      setUser(true);
-      setDeal(false);
-      setSyndicate(false);
-    }
-    if (
-      pathname === "/dashboard/startup/startup-list" ||
-      pathname === "/dashboard/startup/deals-list"
-    ) {
-      setDeal(true);
-      setUser(false);
-      setSyndicate(false);
-    }
-    if (
-      pathname === "/dashboard/syndicate/registrations" ||
-      pathname === "/dashboard/syndicate/management"
-    ) {
-      setUser(false);
-      setDeal(false);
-      setSyndicate(true);
-    }
-  }, [pathname]);
+  const router = useRouter();
+
+
+
 
   return (
     <aside className="hidden md:flex flex-col items-start justify-normal fixed top-0 left-0 bottom-0 bg-[#00173A] w-[175px] px-[4px] py-5 gap-y-[36px] ">
@@ -78,7 +54,6 @@ const SideBar = () => {
           </span>
         </Link>
         <DropDownNavigation
-          active={user}
           title="User List"
           Links={[
             { href: "/dashboard/user/registrations", title: "Registrations" },
@@ -86,7 +61,6 @@ const SideBar = () => {
           ]}
         />
         <DropDownNavigation
-          active={deal}
           title="Startups"
           Links={[
             { href: "/dashboard/startup/startup-list", title: "Startup list" },
@@ -94,7 +68,6 @@ const SideBar = () => {
           ]}
         />
         <DropDownNavigation
-          active={syndicate}
           title="Syndicates"
           Links={[
             {
@@ -108,6 +81,16 @@ const SideBar = () => {
           ]}
         />
       </div>
+      <div className="flex flex-1 w-full  justify-end flex-col px-5 py-5">
+        <LogOut
+          onClick={(e) => {
+            e.preventDefault();
+            localStorage.removeItem("authToken");
+            router.push("/");
+          }}
+          className="text-[#FFF] cursor-pointer"
+        />
+      </div>
     </aside>
   );
 };
@@ -115,7 +98,6 @@ const SideBar = () => {
 export default SideBar;
 
 type DropDownNavigationProps = {
-  active:boolean
   title: string;
   Links: {
     href: string;
@@ -123,14 +105,15 @@ type DropDownNavigationProps = {
   }[];
 };
 
-const DropDownNavigation = ({active, title, Links }: DropDownNavigationProps) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(active);
+const DropDownNavigation = ({
+  title,
+  Links,
+}: DropDownNavigationProps) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const toggleDropdown = () => {
-    if (!active) {
-      
+    
       setIsDropdownOpen(!isDropdownOpen);
-    }
   };
 
   const { pathname } = usePaths();

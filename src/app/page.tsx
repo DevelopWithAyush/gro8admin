@@ -1,13 +1,27 @@
-import React from 'react'
+"use client"
+import Login from "@/components/global/Login";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
+const Page = () => {
+  const router = useRouter();
 
-const page = () => {
+  useEffect(() => {
+    const checkAuth = () => {
+      const authToken = localStorage.getItem("authToken");
+      if (authToken) {
+        router.push("/dashboard");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
   return (
     <div>
-      this is the login page where user login 
+      <Login />
     </div>
-  )
-}
+  );
+};
 
-
-export default page
+export default Page;

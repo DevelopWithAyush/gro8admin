@@ -53,7 +53,8 @@ const StartUpTabs = ({
         {propTabs.map((tab, idx) => (
           <button
             key={tab.id}
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               moveSelectedTabToTop(idx);
             }}
             className={cn(
