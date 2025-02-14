@@ -111,10 +111,10 @@ const UserTable: React.FC = () => {
       cell: ({ row }) => (
         <Link
           href={`${pathname === "/dashboard/user/registrations"
-            ? `/dashboard/user/registrations/${row.original.id}`
+            ? `/dashboard/user/registrations/${row.original.accountType.toLowerCase()}/${row.original.id}`
             : pathname === "/dashboard/user/management"
               ? `/dashboard/user/management/${row.original.id}`
-              : `/dashboard/user/registrations/${row.original.id}`}`}
+              : `/dashboard/user/registrations/${row.original.accountType.toLowerCase()}/${row.original.id}`}`}
           className="flex flex-row items-center justify-start gap-2"
         >
           <span className="text-[16px] font-urbanist-semibold_600">

@@ -6,6 +6,7 @@ body {
   background: #f2f6fa;
   width: 100vw;
   overflow-x: hidden;
+  text-transform: capitalize;
 }
 
 @font-face {
