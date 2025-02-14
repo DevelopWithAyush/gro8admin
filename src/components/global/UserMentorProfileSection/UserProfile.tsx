@@ -1,7 +1,31 @@
 import { ExternalLink } from "lucide-react";
 import React from "react";
+import { format } from "date-fns";
 
-const UserProfile = () => {
+export interface MentorProfileData {
+  id: string;
+  email: string;
+  createdAt: string;
+  role: string;
+  profile: {
+    mentorProfile: {
+      country: string;
+      state: string;
+      city: string;
+      gender: string;
+      industryPreferences: number[];
+      expertise: {
+        startups: Array<{
+          name: string;
+          url: string;
+          details: string;
+        }>;
+      };
+    };
+  };
+}
+
+const UserProfile = ({ data }: { data: MentorProfileData }) => {
   return (
     <div className="p-5 flex flex-col items-start justify-normal border-[1px] border-solid border-[#E8E8F1] w-full bg-[#FFF] rounded-[12px] gap-[12px] ">
       <p className="text-[#26252F] text-[26px] font-urbanist-regular_400 leading-normal">
@@ -13,7 +37,7 @@ const UserProfile = () => {
             Registration
           </p>
           <p className="text-[#000] text-[16px] font-rubik-regular_400 leading-5">
-            01/02/2024
+            {format(new Date(data.createdAt), 'dd/MM/yyyy')}
           </p>
         </div>
         <div className="flex flex-col items-start justify-normal gap-1">
@@ -21,16 +45,15 @@ const UserProfile = () => {
             Country Of Origin
           </p>
           <p className="text-[#000] text-[16px] font-rubik-regular_400 leading-5">
-            India
+            {data.profile.mentorProfile.country}
           </p>
         </div>
         <div className="flex flex-col items-start justify-normal gap-1">
           <p className="text-[#696971] text-[12px] font-rubik-light_300 leading-normal">
             LinkedIN Account
           </p>
-          <p className="text-[#000] text-[16px] font-rubik-regular_400 leading-5  underline flex items-center gap-1">
-            https://www.888vc.co{" "}
-            <ExternalLink className="w-[16px] text-[#0061FE]" />{" "}
+          <p className="text-[#000] text-[16px] font-rubik-regular_400 leading-5 underline flex items-center gap-1">
+            View Profile <ExternalLink className="w-[16px] text-[#0061FE]" />
           </p>
         </div>
       </div>

@@ -1,15 +1,35 @@
+"use client";
 import ApprovalStatus from "@/components/global/ApprovalStatus";
-import ProfileAndKycDetails from "@/components/UserRegistrations/ProfileAndKycDetails";
-import UserProfileSection from "@/components/global/UserProfileSection";
+import UserInvestorProfileSection from "@/components/global/UserInvestorProfileSection";
 import UserTimeline from "@/components/global/UserTimeline";
-import React from "react";
+import InvestorProfileAndKycDetails from "@/components/UserRegistrations/InvestorProfileAndKycDetails";
+import { fetchInvestorMetadata } from "@/store/features/investorMetadataSlice";
+import { AppDispatch, RootState } from "@/store/store";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const Page = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const params = useParams();
+    const { data, loading, error } = useSelector((state: RootState) => state.investorMetadata);
+
+    useEffect(() => {
+        if (params.slug) {
+            dispatch(fetchInvestorMetadata(params.slug as string));
+        }
+    }, [dispatch, params.slug]);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!data) return null;
+
     return (
         <div className="w-full grid grid-cols-12 gap-5 mt-[12px]">
             <div className="col-span-8 w-full flex flex-col items-start justify-start gap-[24px]">
-                <UserProfileSection />
-                <ProfileAndKycDetails />
+                <UserInvestorProfileSection data={data} />
+                <InvestorProfileAndKycDetails data={data} />
             </div>
             <div className="col-span-4 w-full flex flex-col items-start justify-start gap-[13.5px]">
                 <ApprovalStatus />

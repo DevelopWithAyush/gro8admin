@@ -1,9 +1,10 @@
 "use client";
 import { motion } from "motion/react";
 import React, { useState } from "react";
-import ProfileSection from "./ProfileSection";
-import KycDetails from "./KycDetails";
-const  ProfileAndKycDetails = () => {
+import ProfileSection, { ProfileData } from "./ProfileSection";
+import KycDetails, { KycData } from "./KycDetails";
+
+const InvestorProfileAndKycDetails = ({ data }: { data: ProfileData & KycData }) => {
   const [activeTab, setActiveTab] = useState<"profile" | "kyc">("profile");
 
   const tabs = [
@@ -16,11 +17,10 @@ const  ProfileAndKycDetails = () => {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`relative z-10 text-[12px] px-[9px] py-[7px] font-rubik-regular_400 ${
-              activeTab === tab.id
-                ? "text-white"
-                : "text-gray-600 hover:text-gray-800"
-            }`}
+            className={`relative z-10 text-[12px] px-[9px] py-[7px] font-rubik-regular_400 ${activeTab === tab.id
+              ? "text-white"
+              : "text-gray-600 hover:text-gray-800"
+              }`}
             onClick={() => setActiveTab(tab.id as "profile" | "kyc")}
           >
             {tab.label}
@@ -48,14 +48,14 @@ const  ProfileAndKycDetails = () => {
         transition={{ duration: 0.3 }}
       >
         {activeTab === "profile" && (
-         <ProfileSection/>
+          <ProfileSection data={data} />
         )}
         {activeTab === "kyc" && (
-          <KycDetails/>
+          <KycDetails data={data} />
         )}
       </motion.div>
     </div>
   );
 };
 
-export default ProfileAndKycDetails;
+export default InvestorProfileAndKycDetails;
