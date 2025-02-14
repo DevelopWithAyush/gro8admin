@@ -1,4 +1,5 @@
 // components/UserTable.tsx
+"use client";
 import React from "react";
 import {
   useReactTable,
@@ -10,89 +11,66 @@ import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePaths } from "@/hooks/user-nav";
+import { useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery } from "@/store/features/dashboardApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
 
 type User = {
-  name: string;
+  id: string;
+  firstName: string;
+  lastName: string;
   accountType: string;
   registrationDate: string;
-  linkedin: string;
+  linkedinAccount: string;
   country: string;
 };
 
-const dummyData: User[] = [
-  {
-    name: "John Doe",
-    accountType: "investor",
-    registrationDate: "2023-01-15",
-    linkedin: "https://linkedin.com/in/johndoe",
-    country: "USA",
-  },
-  {
-    name: "Jane Smith",
-    accountType: "mentor",
-    registrationDate: "2023-02-10",
-    linkedin: "https://linkedin.com/in/janesmith",
-    country: "UK",
-  },
-  {
-    name: "Rahul Mehta",
-    accountType: "investor",
-    registrationDate: "2023-03-05",
-    linkedin: "https://linkedin.com/in/rahulmehta",
-    country: "India",
-  },
-  {
-    name: "Jane Smith",
-    accountType: "mentor",
-    registrationDate: "2023-02-10",
-    linkedin: "https://linkedin.com/in/janesmith",
-    country: "UK",
-  },
-  {
-    name: "Rahul Mehta",
-    accountType: "investor",
-    registrationDate: "2023-03-05",
-    linkedin: "https://linkedin.com/in/rahulmehta",
-    country: "India",
-  },
-  {
-    name: "Jane Smith",
-    accountType: "mentor",
-    registrationDate: "2023-02-10",
-    linkedin: "https://linkedin.com/in/janesmith",
-    country: "UK",
-  },
-  {
-    name: "Rahul Mehta",
-    accountType: "investor",
-    registrationDate: "2023-03-05",
-    linkedin: "https://linkedin.com/in/rahulmehta",
-    country: "India",
-  },
-];
+const formatDate = (dateString: string) => {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch (error) {
+    return dateString;
+  }
+};
+
+const getErrorMessage = (error: FetchBaseQueryError | SerializedError | undefined) => {
+  if (!error) return 'Unknown error occurred';
+
+  if ('status' in error) {
+    return `Error: ${error.status} - ${error.data || 'Unknown error'}`;
+  }
+
+  return error.message || 'Unknown error occurred';
+};
 
 const UserTable: React.FC = () => {
   const { pathname } = usePaths();
 
   const columns: ColumnDef<User>[] = [
     {
-      accessorKey: "name",
+      accessorFn: (row) => `${row.firstName} ${row.lastName}`,
       header: "Name",
     },
     {
       accessorKey: "accountType",
       header: "Account Type",
       cell: ({ getValue }) => {
+        const accountType = getValue<string>();
         return (
           <div className="flex flex-col items-start justify-start">
             <p
               className={cn(
-                getValue<string>() === "investor" && "bg-[#6B9CEC]",
-                getValue<string>() === "mentor" && "bg-[#F56D6D]",
-                "px-1 py-[1px] text-[8px] font-bold leading-normal rounded-[8px] flex flex-col items-center justify-center  text-[#FEFEFE] uppercase"
+                accountType === "INVESTOR" && "bg-[#6B9CEC]",
+                accountType === "MENTOR" && "bg-[#F56D6D]",
+                "px-1 py-[1px] text-[8px] font-bold leading-normal rounded-[8px] flex flex-col items-center justify-center text-[#FEFEFE] uppercase"
               )}
             >
-              {getValue<string>()}
+              {accountType}
             </p>
           </div>
         );
@@ -101,20 +79,26 @@ const UserTable: React.FC = () => {
     {
       accessorKey: "registrationDate",
       header: "Registration Date",
+      cell: ({ getValue }) => formatDate(getValue<string>())
     },
     {
-      accessorKey: "linkedin",
+      accessorKey: "linkedinAccount",
       header: "LinkedIn Account",
-      cell: ({ getValue }) => (
-        <a
-          href={getValue<string>()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline"
-        >
-          View
-        </a>
-      ),
+      cell: ({ getValue }) => {
+        const linkedin = getValue<string>();
+        return linkedin && linkedin !== "Nil" ? (
+          <a
+            href={linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline"
+          >
+            View
+          </a>
+        ) : (
+          <span className="text-gray-400">-</span>
+        );
+      },
     },
     {
       accessorKey: "country",
@@ -123,37 +107,66 @@ const UserTable: React.FC = () => {
     {
       id: "actions",
       header: "",
-      cell: () => (
+      cell: ({ row }) => (
         <Link
-          href={`${
-            pathname === "/dashboard/user/registrations"
-              ? "/dashboard/user/registrations/1"
-              : pathname === "/dashboard/user/management"
-              ? "/dashboard/user/management/1"
-              : "/dashboard/user/registrations/1"
-          }`}
-          className=" flex flex-row items-center justify-start gap-2"
+          href={`${pathname === "/dashboard/user/registrations"
+            ? `/dashboard/user/registrations/${row.original.id}`
+            : pathname === "/dashboard/user/management"
+              ? `/dashboard/user/management/${row.original.id}`
+              : `/dashboard/user/registrations/${row.original.id}`}`}
+          className="flex flex-row items-center justify-start gap-2"
         >
-          <span className="text-[16px] font-urbanist-semibold_600 ">
-            {" "}
+          <span className="text-[16px] font-urbanist-semibold_600">
             View User Details
-          </span>{" "}
-          <ChevronRight className=" text-[#0061FE] w-[16px]" />
+          </span>
+          <ChevronRight className="text-[#0061FE] w-[16px]" />
         </Link>
       ),
     },
   ];
 
+  const { data: investorResponse, isLoading: isLoadingInvestors, error: investorError } = useGetInvestorRegistrationsQuery({
+    page: 1,
+    pageSize: 10
+  }, {
+    skip: typeof window === 'undefined'
+  });
+
+  const { data: mentorResponse, isLoading: isLoadingMentors, error: mentorError } = useGetMentorRegistrationsQuery({
+    page: 1,
+    pageSize: 10
+  }, {
+    skip: typeof window === 'undefined'
+  });
+
+  const combinedData = [
+    ...(investorResponse?.data || []),
+    ...(mentorResponse?.data || [])
+  ];
+
   const table = useReactTable({
-    data: dummyData,
+    data: combinedData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
+  // Now handle loading, error and empty states
+  if (isLoadingInvestors || isLoadingMentors) {
+    return <div className="w-full p-4 text-center text-gray-500">Loading user data...</div>;
+  }
+
+  if (investorError || mentorError) {
+    return <div className="w-full p-4 text-center text-red-500">{getErrorMessage(investorError || mentorError)}</div>;
+  }
+
+  if (combinedData.length === 0) {
+    return <div className="w-full p-4 text-center text-gray-500">No user data available</div>;
+  }
+
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full border border-[#E8E8F1] table-auto">
-        <thead className="">
+        <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
@@ -164,9 +177,9 @@ const UserTable: React.FC = () => {
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                 </th>
               ))}
             </tr>

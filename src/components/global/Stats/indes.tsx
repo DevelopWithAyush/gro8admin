@@ -1,5 +1,6 @@
 import { CurrentIcon, StartupStatsIcon, UserStatsIcon } from "@/Icon/SvgIcon";
 import StatsCard from "./StatsCard";
+import { useGetDashboardStatsQuery } from "@/store/features/dashboardApi";
 
 const data1 = {
   title: "Current ongoing deals",
@@ -15,11 +16,21 @@ const data3 = {
 };
 
 const StatsSection = () => {
+  const { data: stats, isLoading, error } = useGetDashboardStatsQuery();
+
+  if (isLoading) {
+    return <div>Loading stats...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading stats</div>;
+  }
+
   return (
     <div className="grid w-full grid-cols-1 sm:grid-cols-3 gap-5">
-      <StatsCard data={data1} statsValue={1234} />
-      <StatsCard data={data2} statsValue={1234} />
-      <StatsCard data={data3} statsValue={1234} />
+      <StatsCard data={data1} statsValue={stats?.ongoingDeals ?? 0} />
+      <StatsCard data={data2} statsValue={stats?.listedStartups ?? 0} />
+      <StatsCard data={data3} statsValue={stats?.newUserRegistrations ?? 0} />
     </div>
   );
 };
