@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Profile from "./Profile";
+
 
 const StartUpProfile = ({ name, about, roundType }: { name: string, about: string, roundType: string }) => {
   return (
