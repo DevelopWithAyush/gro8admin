@@ -28,7 +28,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
           acceleratorDetails={startupData?.acceleratorDetails}
         />
       </div>
-      <div className='col-span-4 w-full flex flex-col items-start justify-start gap-y-[13.5px]'>
+      <div className='col-span-4 w-full flex flex-col items-start  justify-start gap-y-[13.5px]'>
         <ApprovalStatus />
         <StartUpTimeLine />
       </div>
