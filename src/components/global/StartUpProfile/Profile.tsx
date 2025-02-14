@@ -1,7 +1,7 @@
 import { ExternalLink } from 'lucide-react'
 import React from 'react'
 
-const Profile = () => {
+const Profile = ({ corporateOffice, marketType, website }: { corporateOffice: string, marketType: string, website: string }) => {
   return (
       <div className="p-5 w-full border border-solid border-[#E8E8F1] overflow-hidden rounded-[12px] bg-[#FFF] flex flex-col items-start justify-start gap-[12px] ">
           <p className="text-[#26252F] font-urbanist-regular_400 text-[25px] leading-[110%] ">
@@ -22,7 +22,7 @@ const Profile = () => {
                       Corporate Office
                   </p>
                   <p className="text-[#000] font-rubik-regular_400 text-[16px] leading-normal">
-                      Bangalore
+                    {corporateOffice}
                   </p>
               </div>
               <div className=" col-span-1 flex flex-col items-start justify-start gap-1 ">
@@ -30,7 +30,7 @@ const Profile = () => {
                       Market Type
                   </p>
                   <p className="text-[#000] font-rubik-regular_400 text-[16px] leading-normal">
-                      Fintech & Banking
+                     {marketType}
                   </p>
               </div>
               <div className=" col-span-1 flex flex-col items-start justify-start gap-1 ">
@@ -38,10 +38,11 @@ const Profile = () => {
                       Website
                   </p>
                   <a
-                      href={"/"}
+                      href={website}
+                      target="_blank"
                       className="text-[#000] font-rubik-regular_400 text-[16px] leading-normal flex flex-row items-center justify-start gap-1"
                   >
-                      https://www.888vc.co{" "}
+                      { website}{" "}
                       <ExternalLink className="w-[16px] text-[#0061FE]" />
                   </a>
               </div>
