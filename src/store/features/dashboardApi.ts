@@ -18,8 +18,19 @@ interface User {
 }
 
 interface UserResponse {
-    totalPages: number  
+    totalPages: number
     data: User[]
+}
+
+interface Startup {
+    id: string;
+    name: string;
+    founder: string;
+    marketType: string;
+    website: string;
+    accountType: string;
+    registrationDate: string;
+    country: string;
 }
 
 const getAuthToken = () => {
@@ -51,7 +62,16 @@ export const dashboardApi = createApi({
         getMentorRegistrations: builder.query<UserResponse, { page: number, pageSize: number }>({
             query: ({ page, pageSize }) => `/dashboard/registrations/mentor?page=${page}&pageSize=${pageSize}`,
         }),
+        getStartupRegistrations: builder.query<
+            { totalPages: number; data: Startup[] },
+            { page: number; pageSize: number }
+        >({
+            query: ({ page, pageSize }) => ({
+                url: `dashboard/registrations/startup?page=${page}&pageSize=${pageSize}`,
+                method: "GET",
+            }),
+        }),
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery } = dashboardApi 
+export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery } = dashboardApi 
