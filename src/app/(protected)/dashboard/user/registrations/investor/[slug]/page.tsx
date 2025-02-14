@@ -6,12 +6,13 @@ import InvestorProfileAndKycDetails from "@/components/UserRegistrations/Investo
 import { fetchInvestorMetadata } from "@/store/features/investorMetadataSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 
 const Page = () => {
     const dispatch = useDispatch<AppDispatch>();
+    const [approvalStatus, setApprovalStatus] = useState<string>("pending");
     const params = useParams();
     const { data, loading, error } = useSelector((state: RootState) => state.investorMetadata);
 
@@ -32,7 +33,7 @@ const Page = () => {
                 <InvestorProfileAndKycDetails data={data} />
             </div>
             <div className="col-span-4 w-full flex flex-col items-start justify-start gap-[13.5px]">
-                <ApprovalStatus />
+                <ApprovalStatus approvalStatus={approvalStatus} setApprovalStatus={setApprovalStatus} />
                 <UserTimeline />
             </div>
         </div>

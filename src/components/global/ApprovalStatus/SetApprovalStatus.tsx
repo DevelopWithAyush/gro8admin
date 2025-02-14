@@ -7,12 +7,12 @@ import {
 import { ChevronDown } from "lucide-react";
 import React from "react";
 
-type Props = {
-  setApprovalStatus: React.Dispatch<React.SetStateAction<string | null>>;
-  approvalStatus: string | null;
-};
+interface SetApprovalStatusProps {
+  approvalStatus: string;
+  setApprovalStatus: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const SetApprovalStatus = ({ setApprovalStatus, approvalStatus }: Props) => {
+const SetApprovalStatus = ({ approvalStatus, setApprovalStatus }: SetApprovalStatusProps) => {
   return (
     <DropdownMenu >
       <DropdownMenuTrigger className="w-full" asChild>

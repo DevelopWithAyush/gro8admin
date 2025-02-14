@@ -5,10 +5,11 @@ import UserTimeline from "@/components/global/UserTimeline";
 import { fetchMentorMetadata } from "@/store/features/mentorMetadataSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Page = () => {
+    const [approvalStatus, setApprovalStatus] = useState<string>("pending");
     const dispatch = useDispatch<AppDispatch>();
     const params = useParams();
     const slug = params?.slug;
@@ -31,7 +32,7 @@ const Page = () => {
                 {/* <MentorProfileAndKycDetails data={data} /> */}
             </div>
             <div className="col-span-4 w-full flex flex-col items-start justify-start gap-[13.5px]">
-                <ApprovalStatus />
+                <ApprovalStatus approvalStatus={approvalStatus} setApprovalStatus={setApprovalStatus} />
                 <UserTimeline />
             </div>
         </div>
