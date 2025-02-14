@@ -9,20 +9,37 @@ import KPI from "./KPI";
 import GrantsAndFunding from "./GrantsAndFunding";
 import Deal from "./Deal";
 import Accelerators from "./Accelerators";
+import { StartupData, BusinessData, TeamData, KPIData, GrantsAndFundingData, DealData, AcceleratorData } from "@/types";
+
 type Tab = {
   id: string;
   label: string;
 };
 
-const StartUpTabs = ({
-  containerClassName,
-
-  tabClassName,
-}: {
+interface StartUpTabsProps {
+  startupDetails?: StartupData;
+  businessDetails?: BusinessData;
+  teamDetails?: TeamData;
+  businessKpi?: KPIData;
+  grantsOrFunding?: GrantsAndFundingData;
+  dealCuration?: DealData;
+  acceleratorDetails?: AcceleratorData;
   containerClassName?: string;
   tabClassName?: string;
   contentClassName?: string;
-}) => {
+}
+
+const StartUpTabs = ({
+  startupDetails,
+  businessDetails,
+  teamDetails,
+  businessKpi,
+  grantsOrFunding,
+  dealCuration,
+  acceleratorDetails,
+  containerClassName,
+  tabClassName,
+}: StartUpTabsProps) => {
   const propTabs = [
     { id: "startup", label: "Startup" },
     { id: "business", label: "Business" },
@@ -94,13 +111,13 @@ const StartUpTabs = ({
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        {active.id === "startup" && <Startup />}
-        {active.id === "business" && <Business />}
-        {active.id === "team" && <Team />}
-        {active.id === "kpi" && <KPI />}
-        {active.id === "grants&funding" && <GrantsAndFunding />}
-        {active.id === "deal" && <Deal />}
-        {active.id === "accelerators" && <Accelerators />}
+        {active.id === "startup" && <Startup data={startupDetails} />}
+        {active.id === "business" && <Business data={businessDetails} />}
+        {active.id === "team" && <Team data={teamDetails} />}
+        {active.id === "kpi" && <KPI data={businessKpi} />}
+        {active.id === "grants&funding" && <GrantsAndFunding data={grantsOrFunding} />}
+        {active.id === "deal" && <Deal data={dealCuration} />}
+        {active.id === "accelerators" && <Accelerators data={acceleratorDetails} />}
       </motion.div>
     </div>
   );

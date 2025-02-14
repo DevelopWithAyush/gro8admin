@@ -34,6 +34,7 @@ const formatDate = (dateString: string) => {
       day: 'numeric'
     });
   } catch (error) {
+    console.error('Error formatting date:', error);
     return dateString;
   }
 };

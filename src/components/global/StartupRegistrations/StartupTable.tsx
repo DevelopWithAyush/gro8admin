@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+
 
 type Startup = {
   id: string;
@@ -24,9 +24,8 @@ type Startup = {
 
 const StartupTable: React.FC = () => {
   const { pathname } = usePaths();
-  const [page, setPage] = useState(1);
   const { data: startupData, isLoading } = useGetStartupRegistrationsQuery({
-    page,
+    page: 1,
     pageSize: 10,
   });
 
@@ -51,7 +50,7 @@ const StartupTable: React.FC = () => {
       accessorKey: "marketType",
       header: "Market Type",
     },
-   
+
     {
       accessorKey: "website",
       header: "Website",
@@ -73,20 +72,20 @@ const StartupTable: React.FC = () => {
     {
       id: "actions",
       header: "",
-      cell: () => (
+      cell: ({ row }) => (
         <Link
           href={`${pathname === "/dashboard/startup/startup-list"
-            ? "/dashboard/startup/startup-list/1"
+            ? `/dashboard/startup/startup-list/${row.original.id}`
             : pathname === "/dashboard/startup/deals-list"
-              ? "/dashboard/startup/deals-list/1"
-              : "/dashboard/startup/startup-list/1"
+              ? `/dashboard/startup/deals-list/${row.original.id}`
+              : `/dashboard/startup/startup-list/${row.original.id}`
             }`}
-          className=" flex flex-row items-center justify-start gap-2"
+          className="flex flex-row items-center justify-start gap-2"
         >
-          <span className="text-[16px] font-urbanist-semibold_600 ">
+          <span className="text-[16px] font-urbanist-semibold_600">
             View User Details
           </span>
-          <ChevronRight className=" text-[#0061FE] w-[16px]" />
+          <ChevronRight className="text-[#0061FE] w-[16px]" />
         </Link>
       ),
     },

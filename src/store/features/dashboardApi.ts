@@ -71,7 +71,10 @@ export const dashboardApi = createApi({
                 method: "GET",
             }),
         }),
+        getStartupMetadata: builder.query({
+            query: (id) => `dashboard/startup/metadata/${id}`,
+        }),
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery } = dashboardApi 
+export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery } = dashboardApi 
