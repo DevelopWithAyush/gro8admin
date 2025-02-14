@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 
-const StartUpProfile = ({ name, about, roundType }: { name: string, about: string, roundType: string }) => {
+const StartUpProfile = ({ name, about, roundType }: { name?: string, about?: string, roundType?: string }) => {
   return (
  
       <div className="pb-5 pt-[109px] px-5 relative w-full border border-solid border-[#E8E8F1] overflow-hidden rounded-[12px] bg-[#FFF] ">
