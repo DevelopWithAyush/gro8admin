@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
-import UserTable from "./UserTable";
+import UserTable from "./InvestorTable";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
-const UserRegistrations = () => {
+const InvestorRegistrations = () => {
   return (
     <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
       <div className="flex flex-row items-center justify-between w-full">
@@ -24,4 +24,4 @@ const UserRegistrations = () => {
   );
 };
 
-export default UserRegistrations;
+export default InvestorRegistrations;

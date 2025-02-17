@@ -1,5 +1,5 @@
 import SearchAndFilter from "@/components/global/SearchAndFilter";
-import UserRegistrations from "@/components/global/UserRegistrations";
+import UserRegistrations from "@/components/global/InvestorRegistrations";
 import React from "react";
 
 const Page = () => {

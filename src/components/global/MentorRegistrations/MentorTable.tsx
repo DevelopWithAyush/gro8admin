@@ -1,19 +1,19 @@
 // components/UserTable.tsx
 "use client";
-import React from "react";
+import { usePaths } from "@/hooks/user-nav";
+import { cn } from "@/lib/utils";
+import { useGetMentorRegistrationsQuery } from "@/store/features/dashboardApi";
+import { SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {
-  useReactTable,
-  getCoreRowModel,
   ColumnDef,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
-import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { usePaths } from "@/hooks/user-nav";
-import { useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery } from "@/store/features/dashboardApi";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { SerializedError } from "@reduxjs/toolkit";
+import React from "react";
 
 type User = {
   id: string;
@@ -126,12 +126,7 @@ const UserTable: React.FC = () => {
     },
   ];
 
-  const { data: investorResponse, isLoading: isLoadingInvestors, error: investorError } = useGetInvestorRegistrationsQuery({
-    page: 1,
-    pageSize: 10
-  }, {
-    skip: typeof window === 'undefined'
-  });
+
 
   const { data: mentorResponse, isLoading: isLoadingMentors, error: mentorError } = useGetMentorRegistrationsQuery({
     page: 1,
@@ -141,7 +136,6 @@ const UserTable: React.FC = () => {
   });
 
   const combinedData = [
-    ...(investorResponse?.data || []),
     ...(mentorResponse?.data || [])
   ];
 
@@ -152,12 +146,18 @@ const UserTable: React.FC = () => {
   });
 
   // Now handle loading, error and empty states
-  if (isLoadingInvestors || isLoadingMentors) {
-    return <div className="w-full p-4 text-center text-gray-500">Loading user data...</div>;
+  if (isLoadingMentors) {
+    return (
+      <div className="w-full p-4">
+        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+      </div>
+    );
   }
 
-  if (investorError || mentorError) {
-    return <div className="w-full p-4 text-center text-red-500">{getErrorMessage(investorError || mentorError)}</div>;
+  if (  mentorError) {
+    return <div className="w-full p-4 text-center text-red-500">{getErrorMessage( mentorError)}</div>;
   }
 
   if (combinedData.length === 0) {

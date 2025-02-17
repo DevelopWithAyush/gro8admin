@@ -3,7 +3,7 @@
 import StartupRegistrations from "@/components/global/StartupRegistrations";
 import StatsSection from "@/components/global/Stats/indes";
 import SyndicateRegistrations from "@/components/global/SyndicateRegistrations";
-import UserRegistrations from "@/components/global/UserRegistrations";
+import UserRegistrations from "@/components/global/InvestorRegistrations";
 
 const Page = () => {
   return (

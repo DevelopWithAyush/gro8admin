@@ -73,6 +73,7 @@ const dummyData: User[] = [
 
 const SyndicateTable: React.FC = () => {
   const { pathname } = usePaths();
+  const isLoading = false; // Replace with actual loading logic
 
   const columns: ColumnDef<User>[] = [
     {
@@ -125,13 +126,12 @@ const SyndicateTable: React.FC = () => {
       header: "",
       cell: () => (
         <Link
-          href={`${
-            pathname === "/dashboard/syndicates/registrations"
+          href={`${pathname === "/dashboard/syndicates/registrations"
               ? "/dashboard/syndicates/registrations/1"
               : pathname === "/dashboard/syndicates/active-syndicates"
-              ? "/dashboard/syndicates/active-syndicates/1"
-              : "dashboard/syndicates/registrations/1"
-          }`}
+                ? "/dashboard/syndicates/active-syndicates/1"
+                : "dashboard/syndicates/registrations/1"
+            }`}
           className=" flex flex-row items-center justify-start gap-2"
         >
           <span className="text-[16px] font-urbanist-semibold_600 ">
@@ -149,6 +149,16 @@ const SyndicateTable: React.FC = () => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  if (isLoading) {
+    return (
+      <div className="w-full p-4">
+        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full overflow-x-auto">
       <table className="w-full border border-[#E8E8F1] table-auto">
@@ -163,9 +173,9 @@ const SyndicateTable: React.FC = () => {
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                 </th>
               ))}
             </tr>

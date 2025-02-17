@@ -19,7 +19,13 @@ const StatsSection = () => {
   const { data: stats, isLoading, error } = useGetDashboardStatsQuery();
 
   if (isLoading) {
-    return <div>Loading stats...</div>;
+    return (
+      <div className="grid w-full grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="h-32 bg-gray-200 animate-pulse rounded-md"></div>
+        <div className="h-32 bg-gray-200 animate-pulse rounded-md"></div>
+        <div className="h-32 bg-gray-200 animate-pulse rounded-md"></div>
+      </div>
+    );
   }
 
   if (error) {
