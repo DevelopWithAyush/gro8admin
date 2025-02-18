@@ -13,7 +13,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 type User = {
   id: string;
@@ -139,6 +139,7 @@ const MentorTable = () => {
     data: mentorResponse,
     isLoading: isLoadingMentors,
     error: mentorError,
+    refetch,
   } = useGetMentorRegistrationsQuery(
     {
       page: 1,
@@ -148,6 +149,10 @@ const MentorTable = () => {
       skip: typeof window === "undefined",
     }
   );
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const combinedData = [...(mentorResponse?.data || [])];
 

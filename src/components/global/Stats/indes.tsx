@@ -1,6 +1,7 @@
 import { CurrentIcon, StartupStatsIcon, UserStatsIcon } from "@/Icon/SvgIcon";
 import StatsCard from "./StatsCard";
 import { useGetDashboardStatsQuery } from "@/store/features/dashboardApi";
+import { useEffect } from "react";
 
 const data1 = {
   title: "Current ongoing deals",
@@ -16,7 +17,11 @@ const data3 = {
 };
 
 const StatsSection = () => {
-  const { data: stats, isLoading, error } = useGetDashboardStatsQuery();
+  const { data: stats, isLoading, error, refetch } = useGetDashboardStatsQuery();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (isLoading) {
     return (

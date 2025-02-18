@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-
+import { useEffect } from "react";
 
 type Startup = {
   id: string;
@@ -24,10 +24,14 @@ type Startup = {
 
 const StartupTable = () => {
   const { pathname } = usePaths();
-  const { data: startupData, isLoading } = useGetStartupRegistrationsQuery({
+  const { data: startupData, isLoading, refetch } = useGetStartupRegistrationsQuery({
     page: 1,
     pageSize: 10,
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const columns: ColumnDef<Startup>[] = [
     {

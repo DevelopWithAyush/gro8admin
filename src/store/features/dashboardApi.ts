@@ -33,6 +33,11 @@ interface Startup {
     country: string;
 }
 
+interface ProfileStatusResponse {
+    success: boolean;
+    message: string;
+}
+
 const getAuthToken = () => {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('authToken');
@@ -74,7 +79,27 @@ export const dashboardApi = createApi({
         getStartupMetadata: builder.query({
             query: (id) => `dashboard/startup/metadata/${id}`,
         }),
+        updateProfileStatus: builder.mutation<ProfileStatusResponse, {
+            id: string;
+            status: string;
+            role: string;
+            reason: string;
+            description: string;
+            documents: [{keyId: string}]
+        }>({
+            query: ({ id, status, role, reason, description, documents }) => ({
+                url: `dashboard/profile/review/${role}`,
+                method: 'POST',
+                body: {
+                    id,
+                    reason,
+                    description,
+                    documents,
+                    status,
+                }
+            })
+        }),
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery } = dashboardApi 
+export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useUpdateProfileStatusMutation } = dashboardApi 

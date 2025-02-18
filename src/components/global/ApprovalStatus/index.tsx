@@ -1,8 +1,48 @@
 "use client";
+import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
+import { useUpdateProfileStatusMutation } from "@/store/features/dashboardApi";
+import { useEffect, useState } from "react";
+import RejectModal from "./RejectModal";
 import SetApprovalStatus from "./SetApprovalStatus";
 
+
 const ApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalStatus: string, setApprovalStatus: React.Dispatch<React.SetStateAction<string>> }) => {
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [relatedDocuments, setRelatedDocuments] = useState<File | null>(null);
+  const [relatedDocumentsKey, setRelatedDocumentsKey] = useState<{ keyId: string }[]>([{
+    keyId: ""
+  }]);
+  const [reason, setReason] = useState<string>("");
+  const [enterText, setEnterText] = useState<string>("");
+  const [role, setRole] = useState("");
+
+  const { pathname, page } = usePaths()
+
+  const paths = pathname.split("/")
+
+  useEffect(() => {
+    if (paths[2] === "startup") {
+      setRole("FOUNDER");
+    } else if (paths[2] === "investor") {
+      setRole("INVESTOR");
+    } else if (paths[2] === "mentor") {
+      setRole("MENTOR");
+    }
+  }, [paths])
+
+
+  const [updateProfileStatus] = useUpdateProfileStatusMutation();
+
+  const handleUpdateProfileStatus = async () => {
+    const response = await updateProfileStatus({ id: page, status: approvalStatus.toUpperCase(), role, reason, description: enterText, documents: [relatedDocumentsKey[0]] });
+    console.log(response);
+    setIsRejectModalOpen(false);
+  }
+
+
+
+
 
   return (
     <div className="w-full bg-[#FFF] p-5 flex flex-col items-start justify-start  rounded-[12px] border border-solid border-[#E8E8F1] ">
@@ -26,7 +66,23 @@ const ApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalStatus:
       <SetApprovalStatus
         setApprovalStatus={setApprovalStatus}
         approvalStatus={approvalStatus}
+        handleUpdateProfileStatus={handleUpdateProfileStatus}
+        setIsRejectModalOpen={setIsRejectModalOpen}
       />
+      {approvalStatus === "rejected" && isRejectModalOpen && (
+        <RejectModal
+          relatedDocuments={relatedDocuments}
+          setRelatedDocuments={setRelatedDocuments}
+          reason={reason}
+          setReason={setReason}
+          enterText={enterText}
+          setEnterText={setEnterText}
+          setApprovalStatus={setApprovalStatus}
+          handleUpdateProfileStatus={handleUpdateProfileStatus}
+          setRelatedDocumentsKey={setRelatedDocumentsKey}
+          setIsRejectModalOpen={setIsRejectModalOpen}
+        />
+      )}
     </div>
   );
 };

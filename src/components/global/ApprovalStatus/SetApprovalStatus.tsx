@@ -10,9 +10,11 @@ import React from "react";
 interface SetApprovalStatusProps {
   approvalStatus: string;
   setApprovalStatus: React.Dispatch<React.SetStateAction<string>>;
+  handleUpdateProfileStatus: () => void;
+  setIsRejectModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SetApprovalStatus = ({ approvalStatus, setApprovalStatus }: SetApprovalStatusProps) => {
+const SetApprovalStatus = ({ approvalStatus, setApprovalStatus, handleUpdateProfileStatus, setIsRejectModalOpen }: SetApprovalStatusProps) => {
   return (
     <DropdownMenu >
       <DropdownMenuTrigger className="w-full" asChild>
@@ -43,9 +45,9 @@ const SetApprovalStatus = ({ approvalStatus, setApprovalStatus }: SetApprovalSta
       <DropdownMenuContent
         align="start"
         className="bg-white shadow-lg rounded-lg border border-gray-200 mt-2 w-56 "
-        // style={{
-        //   width: "inherit",
-        // }}
+      // style={{
+      //   width: "inherit",
+      // }}
       >
         <DropdownMenuItem
           onClick={() => setApprovalStatus("pending")}
@@ -54,19 +56,28 @@ const SetApprovalStatus = ({ approvalStatus, setApprovalStatus }: SetApprovalSta
           Pending
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => setApprovalStatus("approved")}
+          onClick={() => {
+            setApprovalStatus("approved")
+            handleUpdateProfileStatus()
+          }}
           className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700 capitalize hover:border-none hover:outline-none"
         >
           Approved
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => setApprovalStatus("rejected")}
+          onClick={() => {
+
+
+            setApprovalStatus("rejected")
+            setIsRejectModalOpen(true)
+          }
+          }
           className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700 capitalize hover:border-none hover:outline-none"
         >
           Rejected
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
+    </DropdownMenu >
   );
 };
 

@@ -13,7 +13,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 type User = {
   id: string;
@@ -58,6 +58,7 @@ const InvestorTable = () => {
     data: investorResponse,
     isLoading,
     error: investorError,
+    refetch,
   } = useGetInvestorRegistrationsQuery(
     {
       page: 1,
@@ -67,6 +68,10 @@ const InvestorTable = () => {
       skip: typeof window === "undefined",
     }
   );
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const combinedData = [...(investorResponse?.data || [])];
 

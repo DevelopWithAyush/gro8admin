@@ -42,7 +42,7 @@ const KycDetails = ({ data }: { data: KycData }) => {
           First name <span className="text-[#F12222]">*</span>
         </p>
         <p className="text-[#151517] text-[16px] flex flex-row items-center leading-[110%]">
-          {kyc.firstName}
+          {kyc?.firstName}
         </p>
       </div>
       <div className="col-span-1 flex flex-col">
@@ -50,7 +50,7 @@ const KycDetails = ({ data }: { data: KycData }) => {
           Last name <span className="text-[#F12222]">*</span>
         </p>
         <p className="text-[#151517] text-[16px] flex flex-row items-center leading-[110%]">
-          {kyc.lastName}
+          {kyc?.lastName}
         </p>
       </div>
       <div className="col-span-1 flex flex-col">
@@ -58,7 +58,7 @@ const KycDetails = ({ data }: { data: KycData }) => {
           Occupation <span className="text-[#F12222]">*</span>
         </p>
         <p className="text-[#151517] text-[16px] flex flex-row items-center leading-[110%]">
-          {kyc.occupation}
+          {kyc?.occupation}
         </p>
       </div>
       <div className="col-span-1 flex flex-col">
@@ -66,7 +66,7 @@ const KycDetails = ({ data }: { data: KycData }) => {
           Country <span className="text-[#F12222]">*</span>
         </p>
         <p className="text-[#151517] text-[16px] flex flex-row items-center leading-[110%]">
-          {kyc.international.taxFormReview.occupation}
+          {kyc?.international?.taxFormReview?.occupation}
         </p>
       </div>
       <div className="col-span-2 flex flex-col items-start justify-start gap-1">
@@ -87,13 +87,13 @@ const KycDetails = ({ data }: { data: KycData }) => {
             Verification Process used<span className="text-[#F12222]">*</span>
           </p>
           <p className="px-[9px] py-[7px] rounded-[16.5px] bg-[#757A94] text-[12px] font-rubik-regular_400 text-[#FFF]">
-            {kyc.international.typeOfVerification}
+            {kyc?.international?.typeOfVerification}
           </p>
         </div>
         <div className="col-span-2 flex flex-row items-center justify-start gap-2">
           <Checkbox
             id="worth"
-            checked={kyc.international.networthExceeds1M}
+            checked={kyc?.international?.networthExceeds1M}
             disabled
           />
           <label htmlFor="worth">
@@ -103,7 +103,7 @@ const KycDetails = ({ data }: { data: KycData }) => {
         <div className="col-span-2 flex flex-row items-center justify-start gap-2">
           <Checkbox
             id="income"
-            checked={kyc.international.avgIncomeOf200kFor2Years}
+            checked={kyc?.international?.avgIncomeOf200kFor2Years}
             disabled
           />
           <label htmlFor="income">
