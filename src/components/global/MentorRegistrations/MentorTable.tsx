@@ -1,4 +1,4 @@
-// components/UserTable.tsx
+// components/MentorTable.tsx
 "use client";
 import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
@@ -28,28 +28,31 @@ type User = {
 const formatDate = (dateString: string) => {
   try {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   } catch (error) {
-    console.error('Error formatting date:', error);
+    console.error("Error formatting date:", error);
     return dateString;
   }
 };
 
-const getErrorMessage = (error: FetchBaseQueryError | SerializedError | undefined) => {
-  if (!error) return 'Unknown error occurred';
+const getErrorMessage = (
+  error: FetchBaseQueryError | SerializedError | undefined
+) => {
+  if (!error) return "Unknown error occurred";
 
-  if ('status' in error) {
-    return `Error: ${error.status} - ${error.data || 'Unknown error'}`;
+  if ("status" in error) {
+    return `Error: ${error.status} - ${error.data || "Unknown error"}`;
   }
 
-  return error.message || 'Unknown error occurred';
+  return error.message || "Unknown error occurred";
 };
 
-const UserTable: React.FC = () => {
+const MentorTable = () => {
+
   const { pathname } = usePaths();
 
   const columns: ColumnDef<User>[] = [
@@ -80,7 +83,7 @@ const UserTable: React.FC = () => {
     {
       accessorKey: "registrationDate",
       header: "Registration Date",
-      cell: ({ getValue }) => formatDate(getValue<string>())
+      cell: ({ getValue }) => formatDate(getValue<string>()),
     },
     {
       accessorKey: "linkedinAccount",
@@ -110,11 +113,17 @@ const UserTable: React.FC = () => {
       header: "",
       cell: ({ row }) => (
         <Link
-          href={`${pathname === "/dashboard/user/registrations"
-            ? `/dashboard/user/registrations/${row.original.accountType.toLowerCase()}/${row.original.id}`
-            : pathname === "/dashboard/user/management"
-              ? `/dashboard/user/management/${row.original.id}`
-              : `/dashboard/user/registrations/${row.original.accountType.toLowerCase()}/${row.original.id}`}`}
+          href={`${
+            pathname === "/dashboard/mentor/registrations"
+              ? `/dashboard/mentor/registrations/${
+                  row.original.id
+                }`
+              : pathname === "/dashboard/mentor/management"
+              ? `/dashboard/mentor/management/${row.original.id}`
+              : `/dashboard/mentor/registrations/${
+                  row.original.id
+                }`
+          }`}
           className="flex flex-row items-center justify-start gap-2"
         >
           <span className="text-[16px] font-urbanist-semibold_600">
@@ -126,18 +135,21 @@ const UserTable: React.FC = () => {
     },
   ];
 
+  const {
+    data: mentorResponse,
+    isLoading: isLoadingMentors,
+    error: mentorError,
+  } = useGetMentorRegistrationsQuery(
+    {
+      page: 1,
+      pageSize: 10,
+    },
+    {
+      skip: typeof window === "undefined",
+    }
+  );
 
-
-  const { data: mentorResponse, isLoading: isLoadingMentors, error: mentorError } = useGetMentorRegistrationsQuery({
-    page: 1,
-    pageSize: 10
-  }, {
-    skip: typeof window === 'undefined'
-  });
-
-  const combinedData = [
-    ...(mentorResponse?.data || [])
-  ];
+  const combinedData = [...(mentorResponse?.data || [])];
 
   const table = useReactTable({
     data: combinedData,
@@ -156,12 +168,12 @@ const UserTable: React.FC = () => {
     );
   }
 
-  if (  mentorError) {
-    return <div className="w-full p-4 text-center text-red-500">{getErrorMessage( mentorError)}</div>;
-  }
-
-  if (combinedData.length === 0) {
-    return <div className="w-full p-4 text-center text-gray-500">No user data available</div>;
+  if (mentorError) {
+    return (
+      <div className="w-full p-4 text-center text-red-500">
+        {getErrorMessage(mentorError)}
+      </div>
+    );
   }
 
   return (
@@ -178,9 +190,9 @@ const UserTable: React.FC = () => {
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </th>
               ))}
             </tr>
@@ -205,4 +217,4 @@ const UserTable: React.FC = () => {
   );
 };
 
-export default UserTable;
+export default MentorTable;

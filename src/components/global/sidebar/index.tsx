@@ -54,17 +54,25 @@ const SideBar = () => {
           </span>
         </Link>
         <DropDownNavigation
-          title="User List"
+          title="Investor"
           Links={[
-            { href: "/dashboard/user/registrations", title: "Registrations" },
-            { href: "/dashboard/user/management", title: "Management" },
+            { href: "/dashboard/investor/registrations", title: "Registrations" },
+            { href: "/dashboard/investor/management", title: "Management" },
+          ]}
+        />
+        <DropDownNavigation
+          title="Mentor"
+          Links={[
+            { href: "/dashboard/mentor/registrations", title: "Registrations" },
+            { href: "/dashboard/mentor/management", title: "Management" },
           ]}
         />
         <DropDownNavigation
           title="Startups"
           Links={[
-            { href: "/dashboard/startup/startup-list", title: "Startup list" },
-            { href: "/dashboard/startup/deals-list", title: "Deals List" },
+            { href: "/dashboard/startup/deal-registration", title: "Deal Registration" },
+            { href: "/dashboard/startup/active-deals", title: "Active Deals" },
+            { href: "/dashboard/startup/startup-rounds", title: "startup-rounds" },
           ]}
         />
         <DropDownNavigation

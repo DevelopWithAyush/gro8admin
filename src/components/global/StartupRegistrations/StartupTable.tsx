@@ -22,7 +22,7 @@ type Startup = {
   country: string;
 };
 
-const StartupTable: React.FC = () => {
+const StartupTable = () => {
   const { pathname } = usePaths();
   const { data: startupData, isLoading } = useGetStartupRegistrationsQuery({
     page: 1,
