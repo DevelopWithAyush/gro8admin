@@ -74,11 +74,11 @@ const StartupTable = () => {
       header: "",
       cell: ({ row }) => (
         <Link
-          href={`${pathname === "/dashboard/startup/startup-list"
-            ? `/dashboard/startup/startup-list/${row.original.id}`
-            : pathname === "/dashboard/startup/deals-list"
-              ? `/dashboard/startup/deals-list/${row.original.id}`
-              : `/dashboard/startup/startup-list/${row.original.id}`
+          href={`${pathname === "/dashboard/startup/deal-registration"
+            ? `/dashboard/startup/deal-registration/${row.original.id}`
+            : pathname === "/dashboard/startup/active-deals"
+              ? `/dashboard/startup/active-deals/${row.original.id}`
+              : `/dashboard/startup/deal-registration/${row.original.id}`
             }`}
           className="flex flex-row items-center justify-start gap-2"
         >
