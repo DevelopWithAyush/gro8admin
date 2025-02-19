@@ -38,6 +38,41 @@ interface ProfileStatusResponse {
     message: string;
 }
 
+interface InvestorMetadata {
+    id: string;
+    email: string;
+    role: string;
+    profile: {
+        investorProfile: {
+            investorType: string;
+            country: string;
+            city: string;
+            state: string;
+            industryPreferences: number[];
+            countriesFilingTaxReturnsIn: string;
+            investorKyc: {
+                firstName: string;
+                lastName: string;
+                occupation: string;
+                international: {
+                    dob: string;
+                    idDocument: {
+                        imageUri: string;
+                    };
+                    typeOfVerification: string;
+                    taxFormReview: {
+                        occupation: string;
+                        totalCommitmentOver5Years: number;
+                    };
+                    networthExceeds1M: boolean;
+                    avgIncomeOf200kFor2Years: boolean;
+                };
+            };
+        };
+    };
+    createdAt: string;
+}
+
 const getAuthToken = () => {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('authToken');
@@ -79,13 +114,16 @@ export const dashboardApi = createApi({
         getStartupMetadata: builder.query({
             query: (id) => `dashboard/startup/metadata/${id}`,
         }),
+        getInvestorMetadata: builder.query<InvestorMetadata, string>({
+            query: (id) => `dashboard/investor/metadata/${id}`,
+        }),
         updateProfileStatus: builder.mutation<ProfileStatusResponse, {
             id: string;
             status: string;
             role: string;
             reason: string;
             description: string;
-            documents: [{keyId: string}]
+            documents: [{ keyId: string }]
         }>({
             query: ({ id, status, role, reason, description, documents }) => ({
                 url: `dashboard/profile/review/${role}`,
@@ -102,4 +140,4 @@ export const dashboardApi = createApi({
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useUpdateProfileStatusMutation } = dashboardApi 
+export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation } = dashboardApi 

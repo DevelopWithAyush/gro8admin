@@ -6,13 +6,14 @@ import { usePaths } from "@/hooks/user-nav";
 
 const InvestorRegistrations = () => {
   const { pathname } = usePaths();
+  const isInvestorList = pathname === "/dashboard/investor/registrations";
   return (
     <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
       <div className="flex flex-row items-center justify-between w-full">
         <p className="text-[#26252F] font-urbanist-regular_400 leading-[110%] text-[25px]">
           Investor Registrations
         </p>
-        {pathname === "/dashboard/investor/registrations" ? (
+        {isInvestorList ? (
           <></>
         ) : (
           <Link
@@ -25,7 +26,7 @@ const InvestorRegistrations = () => {
         )}
       </div>
       <InvestorTable />
-      {pathname === "/dashboard/investor/registrations" ? (<div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600 ">pagination</div>):(<></>)}
+      {isInvestorList ? (<div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600 ">pagination</div>):(<></>)}
      
     </div>
   );

@@ -1,14 +1,13 @@
 "use client";
-import { usePaths } from "@/hooks/user-nav";
 import { DashboardIcon, DownArrowIcon, Logo, UserList } from "@/Icon/SvgIcon";
 import { cn } from "@/lib/utils";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const SideBar = () => {
-  const { pathname } = usePaths();
+  const pathname = usePathname();
 
 
   const router = useRouter();
@@ -123,9 +122,8 @@ const DropDownNavigation = ({
     
       setIsDropdownOpen(!isDropdownOpen);
   };
-
-  const { pathname } = usePaths();
-
+  const pathname = usePathname();
+      
   return (
     <>
       {/* Dropdown button */}

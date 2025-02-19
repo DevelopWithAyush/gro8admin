@@ -31,7 +31,7 @@ const StartupTable = () => {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   const columns: ColumnDef<Startup>[] = [
     {

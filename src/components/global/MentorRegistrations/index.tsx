@@ -7,13 +7,15 @@ import { usePaths } from "@/hooks/user-nav";
 const MentorRegistrations = () => {
   const { pathname } = usePaths();
 
+  const isMentorList = pathname === "/dashboard/mentor/registrations";
+
   return (
     <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
       <div className="flex flex-row items-center justify-between w-full">
         <p className="text-[#26252F] font-urbanist-regular_400 leading-[110%] text-[25px]">
           Mentor Registrations
         </p>
-        {pathname === "/dashboard/mentor/registrations" ? (
+        {isMentorList ? (
           <></>
         ) : (
           <Link
@@ -26,7 +28,7 @@ const MentorRegistrations = () => {
         )}
       </div>
       <MentorTable />
-      {pathname === "/dashboard/mentor/registrations" ? (<div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600 ">pagination</div>) : (<></>)}
+      {isMentorList ? (<div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600 ">pagination</div>) : (<></>)}
 
     </div>
   );

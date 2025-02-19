@@ -2,7 +2,7 @@
 import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
 import { useUpdateProfileStatusMutation } from "@/store/features/dashboardApi";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import RejectModal from "./RejectModal";
 import SetApprovalStatus from "./SetApprovalStatus";
 
@@ -17,25 +17,26 @@ const ApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalStatus:
   const [enterText, setEnterText] = useState<string>("");
   const [role, setRole] = useState("");
 
-  const { pathname, page } = usePaths()
+  const { pathname } = usePaths()
 
-  const paths = pathname.split("/")
+  const paths = useMemo(() => pathname.split("/"), [pathname]);
 
   useEffect(() => {
-    if (paths[2] === "startup") {
+    const section = paths[2];
+    if (section === "startup") {
       setRole("FOUNDER");
-    } else if (paths[2] === "investor") {
+    } else if (section === "investor") {
       setRole("INVESTOR");
-    } else if (paths[2] === "mentor") {
+    } else if (section === "mentor") {
       setRole("MENTOR");
     }
-  }, [paths])
+  }, [paths]);
 
 
   const [updateProfileStatus] = useUpdateProfileStatusMutation();
 
   const handleUpdateProfileStatus = async () => {
-    const response = await updateProfileStatus({ id: page, status: approvalStatus.toUpperCase(), role, reason, description: enterText, documents: [relatedDocumentsKey[0]] });
+    const response = await updateProfileStatus({ id: paths[paths.length - 1], status: approvalStatus.toUpperCase(), role, reason, description: enterText, documents: [relatedDocumentsKey[0]] });
     console.log(response);
     setIsRejectModalOpen(false);
   }

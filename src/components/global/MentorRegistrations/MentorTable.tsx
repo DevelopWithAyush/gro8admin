@@ -25,19 +25,7 @@ type User = {
   country: string;
 };
 
-const formatDate = (dateString: string) => {
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return dateString;
-  }
-};
+
 
 const getErrorMessage = (
   error: FetchBaseQueryError | SerializedError | undefined
@@ -83,7 +71,10 @@ const MentorTable = () => {
     {
       accessorKey: "registrationDate",
       header: "Registration Date",
-      cell: ({ getValue }) => formatDate(getValue<string>()),
+      cell: ({ getValue }) => {
+        const date = new Date(getValue<string>());
+        return date.toLocaleDateString();
+      }
     },
     {
       accessorKey: "linkedinAccount",
@@ -152,12 +143,12 @@ const MentorTable = () => {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
-  const combinedData = [...(mentorResponse?.data || [])];
+  
 
   const table = useReactTable({
-    data: combinedData,
+    data: mentorResponse?.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

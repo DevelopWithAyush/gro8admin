@@ -1,6 +1,5 @@
 // components/UserTable.tsx
 "use client";
-import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
 import { useGetInvestorRegistrationsQuery } from "@/store/features/dashboardApi";
 import { SerializedError } from "@reduxjs/toolkit";
@@ -13,7 +12,8 @@ import {
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect } from "react";
+  import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 type User = {
   id: string;
@@ -25,19 +25,7 @@ type User = {
   country: string;
 };
 
-const formatDate = (dateString: string) => {
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return dateString;
-  }
-};
+
 
 const getErrorMessage = (
   error: FetchBaseQueryError | SerializedError | undefined
@@ -52,7 +40,7 @@ const getErrorMessage = (
 };
 
 const InvestorTable = () => {
-  const { pathname } = usePaths();
+  const pathname = usePathname();
 
   const {
     data: investorResponse,
@@ -71,9 +59,9 @@ const InvestorTable = () => {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
-  const combinedData = [...(investorResponse?.data || [])];
+  
 
   const columns: ColumnDef<User>[] = [
     {
@@ -103,7 +91,10 @@ const InvestorTable = () => {
     {
       accessorKey: "registrationDate",
       header: "Registration Date",
-      cell: ({ getValue }) => formatDate(getValue<string>()),
+      cell: ({ getValue }) => {
+        const date = new Date(getValue<string>());
+        return date.toLocaleDateString();
+      }
     },
     {
       accessorKey: "linkedinAccount",
@@ -133,6 +124,8 @@ const InvestorTable = () => {
       header: "",
       cell: ({ row }) => (
         <Link
+
+          
           href={`${
             pathname === "/dashboard/investor/registrations"
               ? `/dashboard/investor/registrations/${row.original.id}`
@@ -140,7 +133,7 @@ const InvestorTable = () => {
               ? `/dashboard/investor/management/${row.original.id}`
               : `/dashboard/investor/registrations/${row.original.id}`
           }`}
-          className="flex flex-row items-center justify-start gap-2"
+          className="flex flex-row items-center justify-start gap-2 relative z-[100]"
         >
           <span className="text-[16px] font-urbanist-semibold_600">
             View User Details
@@ -152,7 +145,7 @@ const InvestorTable = () => {
   ];
 
   const table = useReactTable({
-    data: combinedData,
+    data: investorResponse?.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -161,11 +154,7 @@ const InvestorTable = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full p-4">
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-      </div>
+      <div>loading</div>
     );
   }
 

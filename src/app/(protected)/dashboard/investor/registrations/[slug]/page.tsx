@@ -1,29 +1,23 @@
 "use client";
+
 import ApprovalStatus from "@/components/global/ApprovalStatus";
 import UserInvestorProfileSection from "@/components/global/UserInvestorProfileSection";
 import UserTimeline from "@/components/global/UserTimeline";
 import InvestorProfileAndKycDetails from "@/components/UserRegistrations/InvestorProfileAndKycDetails";
-import { fetchInvestorMetadata } from "@/store/features/investorMetadataSlice";
-import { AppDispatch, RootState } from "@/store/store";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useGetInvestorMetadataQuery } from "@/store/features/dashboardApi";
 
+import React, { useState } from "react";
 
-const Page = () => {
-    const dispatch = useDispatch<AppDispatch>();
+interface ClientPageProps {
+    slug: string;
+}
+
+const ClientPage: React.FC<ClientPageProps> = ({ slug }) => {
     const [approvalStatus, setApprovalStatus] = useState<string>("pending");
-    const params = useParams();
-    const { data, loading, error } = useSelector((state: RootState) => state.investorMetadata);
+    const { data, isLoading, error } = useGetInvestorMetadataQuery(slug);
 
-    useEffect(() => {
-        if (params.slug) {
-            dispatch(fetchInvestorMetadata(params.slug as string));
-        }
-    }, [dispatch, params.slug]);
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error loading investor data</div>;
     if (!data) return null;
 
     return (
@@ -40,4 +34,7 @@ const Page = () => {
     );
 };
 
-export default Page;
+export default function Page({ params }: { params: Promise<{ slug: string }> }) {
+    const resolvedParams = React.use(params);
+    return <ClientPage slug={resolvedParams.slug} />;
+}
