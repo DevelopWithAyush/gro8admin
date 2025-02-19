@@ -12,20 +12,19 @@ import {
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-  import React, { useEffect } from "react";
+import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 type User = {
   id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  profilePicture: string;
   accountType: string;
   registrationDate: string;
   linkedinAccount: string;
   country: string;
 };
-
-
 
 const getErrorMessage = (
   error: FetchBaseQueryError | SerializedError | undefined
@@ -61,12 +60,23 @@ const InvestorTable = () => {
     refetch();
   }, [refetch]);
 
-  
-
   const columns: ColumnDef<User>[] = [
     {
-      accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+      accessorFn: (row) => `${row.profilePicture} ${row.name}`,
       header: "Name",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <div className="relative h-10 w-10 rounded-[4px] overflow-hidden">
+            <Image
+              src={ row.original.profilePicture || "/images/profile1.png"}
+              alt={row.original.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+          <span>{row.original.name}</span>
+        </div>
+      ),
     },
     {
       accessorKey: "accountType",
@@ -74,7 +84,7 @@ const InvestorTable = () => {
       cell: ({ getValue }) => {
         const accountType = getValue<string>();
         return (
-          <div className="flex flex-col items-start justify-start">
+          <div className="flex flex-col items-start justify-start"> 
             <p
               className={cn(
                 accountType === "INVESTOR" && "bg-[#6B9CEC]",
@@ -124,15 +134,12 @@ const InvestorTable = () => {
       header: "",
       cell: ({ row }) => (
         <Link
-
-          
-          href={`${
-            pathname === "/dashboard/investor/registrations"
+          href={`${pathname === "/dashboard/investor/registrations"
               ? `/dashboard/investor/registrations/${row.original.id}`
               : pathname === "/dashboard/investor/management"
-              ? `/dashboard/investor/management/${row.original.id}`
-              : `/dashboard/investor/registrations/${row.original.id}`
-          }`}
+                ? `/dashboard/investor/management/${row.original.id}`
+                : `/dashboard/investor/registrations/${row.original.id}`
+            }`}
           className="flex flex-row items-center justify-start gap-2 relative z-[100]"
         >
           <span className="text-[16px] font-urbanist-semibold_600">
@@ -180,9 +187,9 @@ const InvestorTable = () => {
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                 </th>
               ))}
             </tr>
@@ -194,7 +201,7 @@ const InvestorTable = () => {
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="px-5 py-[13px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
+                  className="px-5 py-[4.5px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

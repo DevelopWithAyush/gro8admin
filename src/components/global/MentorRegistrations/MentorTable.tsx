@@ -12,13 +12,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 
 type User = {
   id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  profilePicture: string;
   accountType: string;
   registrationDate: string;
   linkedinAccount: string;
@@ -45,8 +46,22 @@ const MentorTable = () => {
 
   const columns: ColumnDef<User>[] = [
     {
-      accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+      accessorFn: (row) => `${row.profilePicture} ${row.name}`,
       header: "Name",
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <div className="relative h-10 w-10 rounded-[4px] overflow-hidden">
+            <Image
+              src={row.original.profilePicture || "/images/profile1.png"}
+              alt={row.original.name} 
+              fill
+              className="object-cover"
+            />
+          </div>
+          <span>{row.original.name}</span>
+        </div>
+      ),
+      
     },
     {
       accessorKey: "accountType",
@@ -200,7 +215,7 @@ const MentorTable = () => {
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="px-5 py-[13px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
+                  className="px-5 py-[4.5px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

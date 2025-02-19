@@ -9,8 +9,8 @@ interface DashboardStats {
 
 interface User {
     id: string
-    firstName: string
-    lastName: string
+    name: string
+    profilePicture: string
     accountType: string
     registrationDate: string
     linkedinAccount: string
