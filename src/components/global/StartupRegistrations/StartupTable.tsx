@@ -33,6 +33,8 @@ const StartupTable = () => {
     refetch();
   }, [refetch]);
 
+  console.log(isLoading,">>>Loading Startup")
+
   const columns: ColumnDef<Startup>[] = [
     {
       accessorKey: "name",

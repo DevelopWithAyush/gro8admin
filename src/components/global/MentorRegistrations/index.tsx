@@ -3,11 +3,49 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import MentorTable from "./MentorTable";
 import { usePaths } from "@/hooks/user-nav";
+import { useGetMentorRegistrationsQuery } from "@/store/features/dashboardApi";
+import { useEffect } from "react";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
+import MentorTableLoader from "./MentorTableLoader";
+
+
+const getErrorMessage = (
+  error: FetchBaseQueryError | SerializedError | undefined
+) => {
+  if (!error) return "Unknown error occurred";
+
+  if ("status" in error) {
+    return `Error: ${error.status} - ${error.data || "Unknown error"}`;
+  }
+
+  return error.message || "Unknown error occurred";
+};
+
 
 const MentorRegistrations = () => {
   const { pathname } = usePaths();
 
-  const isMentorList = pathname === "/dashboard/mentor/registrations";
+  const isMentorList = pathname === "/dashboard/mentor/registrations";  
+
+  const {
+    data: mentorResponse,
+    isLoading,
+    error: mentorError,
+    refetch,
+  } = useGetMentorRegistrationsQuery( 
+    {
+      page: 1,
+      pageSize: 10,
+    },
+    {
+      skip: typeof window === "undefined",
+    }
+  );
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
@@ -27,8 +65,20 @@ const MentorRegistrations = () => {
           </Link>
         )}
       </div>
-      <MentorTable />
-      {isMentorList ? (<div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600 ">pagination</div>) : (<></>)}
+      {isLoading ? (
+        <MentorTableLoader />
+      ) : mentorError ? (
+        <div className="w-full p-4 text-center text-red-500">
+          {getErrorMessage(mentorError)}
+        </div>
+      ) : (
+          <MentorTable data={mentorResponse?.data || []} />
+      )}
+      {isMentorList ? (
+        <div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600 ">pagination</div>
+      ) : (
+        <></>
+      )}
 
     </div>
   );

@@ -2,9 +2,6 @@
 "use client";
 import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
-import { useGetMentorRegistrationsQuery } from "@/store/features/dashboardApi";
-import { SerializedError } from "@reduxjs/toolkit";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {
   ColumnDef,
   flexRender,
@@ -14,7 +11,6 @@ import {
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
 
 type User = {
   id: string;
@@ -28,19 +24,8 @@ type User = {
 
 
 
-const getErrorMessage = (
-  error: FetchBaseQueryError | SerializedError | undefined
-) => {
-  if (!error) return "Unknown error occurred";
 
-  if ("status" in error) {
-    return `Error: ${error.status} - ${error.data || "Unknown error"}`;
-  }
-
-  return error.message || "Unknown error occurred";
-};
-
-const MentorTable = () => {
+const MentorTable = ({ data }: { data: User[] }) => {
 
   const { pathname } = usePaths();
 
@@ -141,53 +126,22 @@ const MentorTable = () => {
     },
   ];
 
-  const {
-    data: mentorResponse,
-    isLoading: isLoadingMentors,
-    error: mentorError,
-    refetch,
-  } = useGetMentorRegistrationsQuery(
-    {
-      page: 1,
-      pageSize: 10,
-    },
-    {
-      skip: typeof window === "undefined",
-    }
-  );
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
 
   
 
   const table = useReactTable({
-    data: mentorResponse?.data || [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  // Now handle loading, error and empty states
-  if (isLoadingMentors) {
-    return (
-      <div className="w-full p-4">
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-      </div>
-    );
-  }
 
-  if (mentorError) {
-    return (
-      <div className="w-full p-4 text-center text-red-500">
-        {getErrorMessage(mentorError)}
-      </div>
-    );
-  }
+
+
 
   return (
+    data.length > 0 ? (
     <div className="w-full overflow-x-auto">
       <table className="w-full border border-[#E8E8F1] table-auto">
         <thead>
@@ -225,6 +179,9 @@ const MentorTable = () => {
         </tbody>
       </table>
     </div>
+  ) : (
+    <p className="text-center w-full text-red-500 font-rubik-bold_700"> No data found</p>
+  )
   );
 };
 

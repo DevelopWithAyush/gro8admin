@@ -33,10 +33,12 @@ const ApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalStatus:
   }, [paths]);
 
 
+
+
   const [updateProfileStatus] = useUpdateProfileStatusMutation();
 
-  const handleUpdateProfileStatus = async () => {
-    const response = await updateProfileStatus({ id: paths[paths.length - 1], status: approvalStatus.toUpperCase(), role, reason, description: enterText, documents: [relatedDocumentsKey[0]] });
+  const handleUpdateProfileStatus = async ({ status }: { status: string }) => {
+    const response = await updateProfileStatus({ id: paths[paths.length - 1], status: status, role, reason, description: enterText, documents: [relatedDocumentsKey[0]] });
     console.log(response);
     setIsRejectModalOpen(false);
   }
@@ -67,7 +69,7 @@ const ApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalStatus:
       <SetApprovalStatus
         setApprovalStatus={setApprovalStatus}
         approvalStatus={approvalStatus}
-        handleUpdateProfileStatus={handleUpdateProfileStatus}
+        handleUpdateProfileStatus={() => handleUpdateProfileStatus({ status: "APPROVED" })}
         setIsRejectModalOpen={setIsRejectModalOpen}
       />
       {approvalStatus === "rejected" && isRejectModalOpen && (
@@ -79,7 +81,7 @@ const ApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalStatus:
           enterText={enterText}
           setEnterText={setEnterText}
           setApprovalStatus={setApprovalStatus}
-          handleUpdateProfileStatus={handleUpdateProfileStatus}
+          handleUpdateProfileStatus={() => handleUpdateProfileStatus({ status: "REJECTED" })}
           setRelatedDocumentsKey={setRelatedDocumentsKey}
           setIsRejectModalOpen={setIsRejectModalOpen}
         />

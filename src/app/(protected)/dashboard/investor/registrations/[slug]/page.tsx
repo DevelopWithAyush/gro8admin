@@ -15,6 +15,7 @@ interface ClientPageProps {
 const ClientPage: React.FC<ClientPageProps> = ({ slug }) => {
     const [approvalStatus, setApprovalStatus] = useState<string>("pending");
     const { data, isLoading, error } = useGetInvestorMetadataQuery(slug);
+    console.log(approvalStatus)
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading investor data</div>;

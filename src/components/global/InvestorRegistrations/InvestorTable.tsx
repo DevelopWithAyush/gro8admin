@@ -1,9 +1,6 @@
 // components/UserTable.tsx
 "use client";
 import { cn } from "@/lib/utils";
-import { useGetInvestorRegistrationsQuery } from "@/store/features/dashboardApi";
-import { SerializedError } from "@reduxjs/toolkit";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {
   ColumnDef,
   flexRender,
@@ -11,10 +8,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import React, { useEffect } from "react";
-import { usePathname } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type User = {
   id: string;
@@ -26,39 +22,20 @@ type User = {
   country: string;
 };
 
-const getErrorMessage = (
-  error: FetchBaseQueryError | SerializedError | undefined
-) => {
-  if (!error) return "Unknown error occurred";
+// const getErrorMessage = (
+//   error: FetchBaseQueryError | SerializedError | undefined
+// ) => {
+//   if (!error) return "Unknown error occurred";
 
-  if ("status" in error) {
-    return `Error: ${error.status} - ${error.data || "Unknown error"}`;
-  }
+//   if ("status" in error) {
+//     return `Error: ${error.status} - ${error.data || "Unknown error"}`;
+//   }
 
-  return error.message || "Unknown error occurred";
-};
+//   return error.message || "Unknown error occurred";
+// };
 
-const InvestorTable = () => {
+const InvestorTable = ({ data }: { data: User[] }) => {
   const pathname = usePathname();
-
-  const {
-    data: investorResponse,
-    isLoading,
-    error: investorError,
-    refetch,
-  } = useGetInvestorRegistrationsQuery(
-    {
-      page: 1,
-      pageSize: 10,
-    },
-    {
-      skip: typeof window === "undefined",
-    }
-  );
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
 
   const columns: ColumnDef<User>[] = [
     {
@@ -68,7 +45,7 @@ const InvestorTable = () => {
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10 rounded-[4px] overflow-hidden">
             <Image
-              src={ row.original.profilePicture || "/images/profile1.png"}
+              src={row.original.profilePicture || "/images/profile1.png"}
               alt={row.original.name}
               fill
               className="object-cover"
@@ -84,7 +61,7 @@ const InvestorTable = () => {
       cell: ({ getValue }) => {
         const accountType = getValue<string>();
         return (
-          <div className="flex flex-col items-start justify-start"> 
+          <div className="flex flex-col items-start justify-start">
             <p
               className={cn(
                 accountType === "INVESTOR" && "bg-[#6B9CEC]",
@@ -135,10 +112,10 @@ const InvestorTable = () => {
       cell: ({ row }) => (
         <Link
           href={`${pathname === "/dashboard/investor/registrations"
-              ? `/dashboard/investor/registrations/${row.original.id}`
-              : pathname === "/dashboard/investor/management"
-                ? `/dashboard/investor/management/${row.original.id}`
-                : `/dashboard/investor/registrations/${row.original.id}`
+            ? `/dashboard/investor/registrations/${row.original.id}`
+            : pathname === "/dashboard/investor/management"
+              ? `/dashboard/investor/management/${row.original.id}`
+              : `/dashboard/investor/registrations/${row.original.id}`
             }`}
           className="flex flex-row items-center justify-start gap-2 relative z-[100]"
         >
@@ -152,66 +129,53 @@ const InvestorTable = () => {
   ];
 
   const table = useReactTable({
-    data: investorResponse?.data || [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
-  // Now handle loading, error and empty states
-
-  if (isLoading) {
-    return (
-      <div>loading</div>
-    );
-  }
-
-  if (investorError) {
-    return (
-      <div className="w-full p-4 text-center text-red-500">
-        {getErrorMessage(investorError)}
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full overflow-x-auto">
-      <table className="w-full border border-[#E8E8F1] table-auto">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="px-5 py-[13px] text-left text-[12px] font-rubik-regular_400 text-[#32363B] border-b border-[#E8E8F1]"
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="hover:bg-gray-50">
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="px-5 py-[4.5px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+    data.length > 0 ? (
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border border-[#E8E8F1] table-auto">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="px-5 py-[13px] text-left text-[12px] font-rubik-regular_400 text-[#32363B] border-b border-[#E8E8F1]"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="hover:bg-gray-50">
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="px-5 py-[4.5px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ) : (
+      <p className="text-center w-full text-red-500 font-rubik-bold_700"> No data found</p>
+    ))
 };
 
 export default InvestorTable;

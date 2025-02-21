@@ -140,4 +140,4 @@ export const dashboardApi = createApi({
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation } = dashboardApi 
+export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation } = dashboardApi   

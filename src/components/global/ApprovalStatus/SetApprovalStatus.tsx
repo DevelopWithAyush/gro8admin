@@ -10,7 +10,7 @@ import React from "react";
 interface SetApprovalStatusProps {
   approvalStatus: string;
   setApprovalStatus: React.Dispatch<React.SetStateAction<string>>;
-  handleUpdateProfileStatus: () => void;
+  handleUpdateProfileStatus: (status: string) => void;
   setIsRejectModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -58,7 +58,7 @@ const SetApprovalStatus = ({ approvalStatus, setApprovalStatus, handleUpdateProf
         <DropdownMenuItem
           onClick={() => {
             setApprovalStatus("approved")
-            handleUpdateProfileStatus()
+              handleUpdateProfileStatus("APPROVED")
           }}
           className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700 capitalize hover:border-none hover:outline-none"
         >
