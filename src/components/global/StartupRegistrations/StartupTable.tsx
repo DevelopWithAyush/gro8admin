@@ -8,6 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -20,6 +21,7 @@ type Startup = {
   accountType: string;
   registrationDate: string;
   country: string;
+  profilePicture: string;
 };
 
 const StartupTable = () => {
@@ -33,12 +35,25 @@ const StartupTable = () => {
     refetch();
   }, [refetch]);
 
-  console.log(isLoading,">>>Loading Startup")
+  
 
   const columns: ColumnDef<Startup>[] = [
     {
-      accessorKey: "name",
-      header: "Name",
+      accessorFn: (row) => `${row.profilePicture} ${row.name}`,
+      header: "Name", 
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <div className="relative h-10 w-10 rounded-[4px] overflow-hidden">
+            <Image
+              src={row.original.profilePicture || "/images/profile1.png"}
+              alt={row.original.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+          <span>{row.original.name}</span>
+        </div>
+      ),  
     },
     {
       accessorKey: "founder",
@@ -141,7 +156,7 @@ const StartupTable = () => {
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="px-5 py-[13px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
+                  className="px-5 py-[4.5px] text-[14px] font-rubik-regular_400 text-[#32363B] border-t border-[#E8E8F1]"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

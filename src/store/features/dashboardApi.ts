@@ -31,6 +31,7 @@ interface Startup {
     accountType: string;
     registrationDate: string;
     country: string;
+    profilePicture: string;
 }
 
 interface ProfileStatusResponse {
@@ -71,6 +72,56 @@ interface InvestorMetadata {
         };
     };
     createdAt: string;
+}
+
+interface PledgeStatus {
+    netAmount: number;
+    totalPledges: number;
+}
+
+interface PledgeCategories {
+    OPPORTUNITY?: PledgeStatus;
+    APPROVED?: PledgeStatus;
+    WIP?: PledgeStatus;
+    DROPPED?: PledgeStatus;
+}
+
+interface StartupRound {
+    id: string;
+    startupId: string;
+    name: string;
+    startupName: string;
+    expiry: string;
+    avatar: string;
+    pledges: {
+        KYC_STATUS?: PledgeCategories;
+        CONSENT?: PledgeCategories;
+        CA_STATUS?: PledgeCategories;
+        DRAWDOWN?: PledgeCategories;
+    };
+}
+
+interface StartupRoundsResponse {
+    totalPages: number;
+    data: StartupRound[];
+}
+
+export interface Pledge {
+    id: string;
+    investmentTermId: string;
+    amountUsd: number;
+    pledgeStage: string;
+    stageStatus: string;
+    investorId: string;
+    updatedAt: string | null;
+    createdAt: string;
+    firstName: string;
+    lastName: string;
+}
+
+interface PledgesResponse {
+    totalPages: number;
+    data: Pledge[];
 }
 
 const getAuthToken = () => {
@@ -137,7 +188,19 @@ export const dashboardApi = createApi({
                 }
             })
         }),
+        getStartupRounds: builder.query<StartupRoundsResponse, { page: number; pageSize: number }>({
+            query: ({ page, pageSize }) =>
+                `/dashboard/startups/approved/rounds?page=${page}&pageSize=${pageSize}`,
+        }),
+        getStartupRoundPledges: builder.query<PledgesResponse, {
+            roundId: string;
+            page: number;
+            pageSize: number;
+        }>({
+            query: ({ roundId, page, pageSize }) =>
+                `/dashboard/startups/approved/rounds/pledges/${roundId}?page=${page}&pageSize=${pageSize}`,
+        }),
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation } = dashboardApi   
+export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation, useGetStartupRoundsQuery, useGetStartupRoundPledgesQuery } = dashboardApi   
