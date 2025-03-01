@@ -98,7 +98,7 @@ const DealsTable = () => {
       header: "",
       cell: ({ row }) => (
         <Link
-          href={`/dashboard/startup/deal-registration/${row.original.startupId}`}
+          href={`/dashboard/startup/deal-registration/${row.original.startupId}?dealId=${row.original.id}`}
           className="flex flex-row items-center justify-start gap-2"
         >
           <span className="text-[16px] font-urbanist-semibold_600">

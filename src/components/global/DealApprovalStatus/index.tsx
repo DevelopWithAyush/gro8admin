@@ -1,7 +1,7 @@
 "use client";
-import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
 import { useUpdateDealStatusMutation } from "@/store/features/dashboardApi";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import RejectModal from "./RejectModal";
 import SetApprovalStatus from "./SetApprovalStatus";
@@ -15,10 +15,10 @@ const DealApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalSta
   const [reason, setReason] = useState<string>("");
   const [enterText, setEnterText] = useState<string>("");
 
-  const { pathname } = usePaths()
-  const paths = pathname.split("/");
-  const dealId = paths[paths.length - 1];
 
+  const searchParams = useSearchParams();
+  const dealId = searchParams.get('dealId') || "";
+  
 
   const [updateDealStatus] = useUpdateDealStatusMutation();
 
