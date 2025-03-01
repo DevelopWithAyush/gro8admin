@@ -1,6 +1,5 @@
 // components/StartupTable.tsx
-import { usePaths } from "@/hooks/user-nav";
-import { useGetStartupRegistrationsQuery } from "@/store/features/dashboardApi";
+import { useGetDealsRegistrationsQuery } from "@/store/features/dashboardApi";
 import {
   ColumnDef,
   flexRender,
@@ -12,21 +11,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
-type Startup = {
+type Deal = {
   id: string;
+  startupId: string;
+  targetAndRaised: {
+    totalRaised: number;
+    percentageAchieved: number;
+    fundingGoalUsd: string;
+  };
   name: string;
-  founder: string;
-  marketType: string;
-  website: string;
-  accountType: string;
-  registrationDate: string;
-  country: string;
-  profilePicture: string;
+  startupName: string;
+  expiry: string;
+  avatar: string;
+  status: string;
 };
 
-const StartupTable = () => {
-  const { pathname } = usePaths();
-  const { data: startupData, isLoading, refetch } = useGetStartupRegistrationsQuery({
+const DealsTable = () => {
+  const { data: dealsData, isLoading, refetch } = useGetDealsRegistrationsQuery({
     page: 1,
     pageSize: 10,
   });
@@ -35,76 +36,73 @@ const StartupTable = () => {
     refetch();
   }, [refetch]);
 
-  
-
-  const columns: ColumnDef<Startup>[] = [
+  const columns: ColumnDef<Deal>[] = [
     {
-      accessorFn: (row) => `${row.profilePicture} ${row.name}`,
-      header: "Name", 
+      accessorFn: (row) => `${row.avatar} ${row.startupName}`,
+      header: "Startup",
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10 rounded-[4px] overflow-hidden">
             <Image
-              src={row.original.profilePicture || "/images/profile1.png"}
-              alt={row.original.name}
+              src={row.original.avatar || "/images/profile1.png"}
+              alt={row.original.startupName}
               fill
               className="object-cover"
             />
           </div>
-          <span>{row.original.name}</span>
+          <span>{row.original.startupName}</span>
         </div>
-      ),  
-    },
-    {
-      accessorKey: "founder",
-      header: "Founder",
-    },
-    {
-      accessorKey: "registrationDate",
-      header: "Registration Date",
-      cell: ({ getValue }) => {
-        const date = new Date(getValue<string>());
-        return date.toLocaleDateString();
-      }
-    },
-    {
-      accessorKey: "marketType",
-      header: "Market Type",
-    },
-
-    {
-      accessorKey: "website",
-      header: "Website",
-      cell: ({ getValue }) => (
-        <a
-          href={getValue<string>()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline"
-        >
-          View
-        </a>
       ),
     },
     {
-      accessorKey: "country",
-      header: "Country",
+      accessorKey: "name",
+      header: "Round Name",
+    },
+    {
+      accessorKey: "expiry",
+      header: "Expiry",
+      cell: ({ getValue }) => {
+        const date = new Date(getValue<string>());
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+      }
+    },
+    {
+      accessorFn: (row) => row.targetAndRaised.fundingGoalUsd,
+      header: "Target Amount",
+      cell: ({ getValue }) => {
+        const amount = parseInt(getValue<string>());
+        return `$${amount.toLocaleString()}`;
+      }
+    },
+    {
+      accessorFn: (row) => row.targetAndRaised.totalRaised,
+      header: "Amount Raised",
+      cell: ({ getValue }) => {
+        return `$${getValue<number>().toLocaleString()}`;
+      }
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ getValue }) => (
+        <span className={`px-2 py-1 rounded ${getValue<string>() === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+          getValue<string>() === 'APPROVED' ? 'bg-green-100 text-green-800' :
+            'bg-gray-100 text-gray-800'
+          }`}>
+          {getValue<string>()}
+        </span>
+      ),
     },
     {
       id: "actions",
       header: "",
       cell: ({ row }) => (
         <Link
-          href={`${pathname === "/dashboard/startup/registration"
-            ? `/dashboard/startup/registration/${row.original.id}`
-            : pathname === "/dashboard/startup/active-deals"
-              ? `/dashboard/startup/active-deals/${row.original.id}`
-              : `/dashboard/startup/registration/${row.original.id}`
-            }`}
+          href={`/dashboard/startup/deal-registration/${row.original.startupId}`}
           className="flex flex-row items-center justify-start gap-2"
         >
           <span className="text-[16px] font-urbanist-semibold_600">
-            View User Details
+            View Details
           </span>
           <ChevronRight className="text-[#0061FE] w-[16px]" />
         </Link>
@@ -113,7 +111,7 @@ const StartupTable = () => {
   ];
 
   const table = useReactTable({
-    data: startupData?.data || [],
+    data: dealsData?.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -169,4 +167,4 @@ const StartupTable = () => {
   );
 };
 
-export default StartupTable;
+export default DealsTable;

@@ -1,12 +1,12 @@
 "use client";
 
-import DealApprovalStatus from '@/components/global/DealApprovalStatus';
-import StartUpProfile from '@/components/global/StartUpProfile';
+import ApprovalStatus from '@/components/global/ApprovalStatus'
+import StartUpProfile from '@/components/global/StartUpProfile'
 import Profile from '@/components/global/StartUpProfile/Profile';
-import StartUpTabs from '@/components/global/StartUpTabs';
-import StartUpTimeLine from '@/components/global/StartUpTimeLine';
-import { useGetStartupMetadataQuery } from '@/store/features/dashboardApi';
-import React, { useState } from 'react';
+import StartUpTabs from '@/components/global/StartUpTabs'
+import StartUpTimeLine from '@/components/global/StartUpTimeLine'
+import { useGetStartupMetadataQuery } from '@/store/features/dashboardApi'
+import React, { useState } from 'react'
 
 interface ClientPageProps {
   slug: string;
@@ -41,8 +41,7 @@ const ClientPage: React.FC<ClientPageProps> = ({ slug }) => {
         />
       </div>
       <div className='col-span-4 w-full flex flex-col items-start justify-start gap-y-[13.5px]'>
-        <DealApprovalStatus approvalStatus={approvalStatus} setApprovalStatus={setApprovalStatus} />
-        {/* <ApprovalStatus approvalStatus={approvalStatus} setApprovalStatus={setApprovalStatus} /> */}
+        <ApprovalStatus approvalStatus={approvalStatus} setApprovalStatus={setApprovalStatus} />
         <StartUpTimeLine />
       </div>
     </div>

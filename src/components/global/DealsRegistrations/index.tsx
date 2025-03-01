@@ -1,10 +1,10 @@
 "use client";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import StartupTable from "./StartupTable";
+import DealsTable from "./DealsTable";
 import { usePaths } from "@/hooks/user-nav";
 
-const StartupRegistrations = () => {
+const DealsRegistrations = () => {
   const { pathname } = usePaths();
 
   const isStartupList = pathname === "/dashboard/startup/registration";
@@ -13,7 +13,7 @@ const StartupRegistrations = () => {
     <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
       <div className="flex flex-row items-center justify-between w-full">
         <p className="text-[#26252F] font-urbanist-regular_400 leading-[110%] text-[25px]">
-          Startup Registrations
+          Deals Registrations
         </p>
         {!isStartupList && (
           <Link
@@ -25,7 +25,7 @@ const StartupRegistrations = () => {
           </Link>
         )}
       </div>
-      <StartupTable />
+      <DealsTable />
       {isStartupList && (
         <div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600">
           pagination
@@ -35,4 +35,4 @@ const StartupRegistrations = () => {
   );
 };
 
-export default StartupRegistrations;
+export default DealsRegistrations;

@@ -69,6 +69,7 @@ const SideBar = () => {
         <DropDownNavigation
           title="Startups"
           Links={[
+            { href: "/dashboard/startup/registration", title: "Registration" },
             { href: "/dashboard/startup/deal-registration", title: "Deal Registration" },
             { href: "/dashboard/startup/active-deals", title: "Active Deals" },
             { href: "/dashboard/startup/startup-rounds", title: "startup-rounds" },

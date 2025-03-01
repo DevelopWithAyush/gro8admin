@@ -1,11 +1,10 @@
 "use client";
 import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
-import { useUpdateProfileStatusMutation } from "@/store/features/dashboardApi";
-import { useEffect, useState, useMemo } from "react";
+import { useUpdateDealStatusMutation } from "@/store/features/dashboardApi";
+import { useState } from "react";
 import RejectModal from "./RejectModal";
 import SetApprovalStatus from "./SetApprovalStatus";
-
 
 const DealApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalStatus: string, setApprovalStatus: React.Dispatch<React.SetStateAction<string>> }) => {
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
@@ -15,37 +14,25 @@ const DealApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalSta
   }]);
   const [reason, setReason] = useState<string>("");
   const [enterText, setEnterText] = useState<string>("");
-  const [role, setRole] = useState("");
 
   const { pathname } = usePaths()
-
-  const paths = useMemo(() => pathname.split("/"), [pathname]);
-  
-  useEffect(() => {
-    const section = paths[2];
-    if (section === "startup") {
-      setRole("FOUNDER");
-    } else if (section === "investor") {
-      setRole("INVESTOR");
-    } else if (section === "mentor") {
-      setRole("MENTOR");
-    }
-  }, [paths]);
+  const paths = pathname.split("/");
+  const dealId = paths[paths.length - 1];
 
 
+  const [updateDealStatus] = useUpdateDealStatusMutation();
 
-
-  const [updateProfileStatus] = useUpdateProfileStatusMutation();
-
-  const handleUpdateProfileStatus = async ({ status }: { status: string }) => {
-    const response = await updateProfileStatus({ id: paths[paths.length - 1], status: status, role, reason, description: enterText, documents: [relatedDocumentsKey[0]] });
+  const handleUpdateDealStatus = async ({ status }: { status: string }) => {
+    const response = await updateDealStatus({
+      id: dealId,
+      status,
+      reason,
+      description: enterText,
+      documents: [relatedDocumentsKey[0]]
+    });
     console.log(response);
     setIsRejectModalOpen(false);
   }
-
-
-
-
 
   return (
     <div className="w-full bg-[#FFF] p-5 flex flex-col items-start justify-start  rounded-[12px] border border-solid border-[#E8E8F1] ">
@@ -69,7 +56,7 @@ const DealApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalSta
       <SetApprovalStatus
         setApprovalStatus={setApprovalStatus}
         approvalStatus={approvalStatus}
-        handleUpdateProfileStatus={() => handleUpdateProfileStatus({ status: "APPROVED" })}
+        handleUpdateProfileStatus={() => handleUpdateDealStatus({ status: "APPROVED" })}
         setIsRejectModalOpen={setIsRejectModalOpen}
       />
       {approvalStatus === "rejected" && isRejectModalOpen && (
@@ -81,7 +68,7 @@ const DealApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approvalSta
           enterText={enterText}
           setEnterText={setEnterText}
           setApprovalStatus={setApprovalStatus}
-          handleUpdateProfileStatus={() => handleUpdateProfileStatus({ status: "REJECTED" })}
+          handleUpdateProfileStatus={() => handleUpdateDealStatus({ status: "REJECTED" })}
           setRelatedDocumentsKey={setRelatedDocumentsKey}
           setIsRejectModalOpen={setIsRejectModalOpen}
         />
