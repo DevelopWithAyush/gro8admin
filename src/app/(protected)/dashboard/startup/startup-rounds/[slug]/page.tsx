@@ -9,16 +9,28 @@ const Page = () => {
   const params = useParams()
   const roundId = params.slug as string
 
-  const { data: pledgesData, isLoading, error } = useGetStartupRoundPledgesQuery({
+  const {
+    data: pledgesData,
+    isLoading,
+    error,
+  } = useGetStartupRoundPledgesQuery({
     roundId,
     page: 1,
     pageSize: 10
-  })
+  }, {
+    refetchOnMountOrArgChange: true,
+    // Only refetch when the window regains focus if it was inactive
+    refetchOnFocus: false,
+  });
 
   return (
-    <main className='flex flex-col items-start justify-start w-full  gap-[13.5px] mt-[14px] '>
+    <main className='flex flex-col items-start justify-start w-full gap-[13.5px] mt-[14px]'>
       <StartupRoundsDetails />
-      <SingleStartupRounds pledges={pledgesData?.data} isLoading={isLoading} error={error} />
+      <SingleStartupRounds
+        pledges={pledgesData?.data}
+        isLoading={isLoading}
+        error={error}
+      />
     </main>
   )
 }

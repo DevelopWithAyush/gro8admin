@@ -166,6 +166,7 @@ export const dashboardApi = createApi({
             return headers;
         },
     }),
+    tagTypes: ['Pledges'],
     endpoints: (builder) => ({
         getDashboardStats: builder.query<DashboardStats, void>({
             query: () => '/dashboard/registrations/stats',
@@ -222,6 +223,13 @@ export const dashboardApi = createApi({
         }>({
             query: ({ roundId, page, pageSize }) =>
                 `/dashboard/startups/approved/rounds/pledges/${roundId}?page=${page}&pageSize=${pageSize}`,
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.data.map(({ id }) => ({ type: 'Pledges' as const, id })),
+                        { type: 'Pledges', id: 'LIST' }
+                    ]
+                    : [{ type: 'Pledges', id: 'LIST' }]
         }),
         getDealsRegistrations: builder.query<DealsResponse, { page: number; pageSize: number }>({
             query: ({ page, pageSize }) => ({
@@ -248,7 +256,24 @@ export const dashboardApi = createApi({
                 }
             })
         }),
+        updatePledge: builder.mutation<void, { id: string; data: { stageStatus: string; pledgeStage: string } }>({
+            query: ({ id, data }) => ({
+                url: `/dashboard/startups/approved/rounds/pledges/${id}`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: (result, error, { id }) => [
+                { type: 'Pledges', id }
+            ],
+            async onQueryStarted({ id, data }, { dispatch, queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                } catch {
+                    // If the update fails, the original data will remain
+                }
+            },
+        }),
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation, useGetStartupRoundsQuery, useGetStartupRoundPledgesQuery, useGetDealsRegistrationsQuery, useUpdateDealStatusMutation } = dashboardApi   
+export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation, useGetStartupRoundsQuery, useGetStartupRoundPledgesQuery, useGetDealsRegistrationsQuery, useUpdateDealStatusMutation, useUpdatePledgeMutation } = dashboardApi   
