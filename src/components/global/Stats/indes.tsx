@@ -21,7 +21,7 @@ const StatsSection = () => {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [refetch]);
 
   if (isLoading) {
     return (

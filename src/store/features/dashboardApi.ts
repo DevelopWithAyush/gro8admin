@@ -263,9 +263,10 @@ export const dashboardApi = createApi({
                 body: data,
             }),
             invalidatesTags: (result, error, { id }) => [
-                { type: 'Pledges', id }
+                { type: 'Pledges', id },
+                { type: 'Pledges', id: 'LIST' }
             ],
-            async onQueryStarted({ id, data }, { dispatch, queryFulfilled }) {
+            async onQueryStarted(_, { queryFulfilled }) {
                 try {
                     await queryFulfilled;
                 } catch {
