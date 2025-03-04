@@ -3,7 +3,7 @@ import React from 'react'
 import { FaXmark } from 'react-icons/fa6';
 import { MdOutlineFileUpload } from 'react-icons/md';
 
-const RejectModal = ({ relatedDocuments, setRelatedDocuments, setApprovalStatus, reason, setReason, enterText, setEnterText, handleUpdateProfileStatus, setRelatedDocumentsKey, setIsRejectModalOpen }: { relatedDocuments: File | null, setRelatedDocuments: (file: File | null) => void, setApprovalStatus: (status: string) => void, reason: string, setReason: (reason: string) => void, enterText: string, setEnterText: (text: string) => void, handleUpdateProfileStatus: () => void, setRelatedDocumentsKey: (key: { keyId: string }[]) => void, setIsRejectModalOpen: (open: boolean) => void }) => {
+const RejectModal = ({ relatedDocuments, setRelatedDocuments, setApprovalStatus, reason, setReason, enterText, setEnterText, handleUpdateProfileStatus, setRelatedDocumentsKey, setIsRejectModalOpen }: { relatedDocuments: File | null, setRelatedDocuments: (file: File | null) => void, setApprovalStatus: (status: string) => void, reason: string, setReason: (reason: string) => void, enterText: string, setEnterText: (text: string) => void, handleUpdateProfileStatus: (data: { status: string }) => void, setRelatedDocumentsKey: (key: { keyId: string }[]) => void, setIsRejectModalOpen: (open: boolean) => void }) => {
     return (
         <>
             <div className="fixed top-0 left-0 right-0 bottom-0 bg-black/20 z-[100]"></div>
@@ -106,14 +106,10 @@ const RejectModal = ({ relatedDocuments, setRelatedDocuments, setApprovalStatus,
 
                         </label>
                     </div>
-                    <button onClick={handleUpdateProfileStatus} className="bg-[#194489] 
-            text-[#FFF]
-            px-[15px]
-            py-[11px]
-            rounded-[8px]
-            font-urbanist-semibold_600
-            text-[14px]
-            leading-normal">
+                    <button
+                        onClick={() => handleUpdateProfileStatus({ status: "REJECTED" })}
+                        className="bg-[#194489] text-[#FFF] px-[15px] py-[11px] rounded-[8px] font-urbanist-semibold_600 text-[14px] leading-normal"
+                    >
                         Confirm
                     </button>
                 </div>

@@ -1,8 +1,8 @@
 "use client";
 import { usePaths } from "@/hooks/user-nav";
 import { cn } from "@/lib/utils";
-import { useUpdateProfileStatusMutation } from "@/store/features/dashboardApi";
-import { useEffect, useState, useMemo } from "react";
+import { useUpdateSyndicateStatusMutation } from "@/store/features/dashboardApi";
+import { useMemo, useState } from "react";
 import RejectModal from "./RejectModal";
 import SetApprovalStatus from "./SetApprovalStatus";
 
@@ -15,32 +15,34 @@ const SyndicateApprovalStatus = ({ approvalStatus, setApprovalStatus }: { approv
   }]);
   const [reason, setReason] = useState<string>("");
   const [enterText, setEnterText] = useState<string>("");
-  const [role, setRole] = useState("");
+
 
   const { pathname } = usePaths()
 
   const paths = useMemo(() => pathname.split("/"), [pathname]);
+
+
+
+
+
+
   
-  useEffect(() => {
-    const section = paths[2];
-    if (section === "startup") {
-      setRole("FOUNDER");
-    } else if (section === "investor") {
-      setRole("INVESTOR");
-    } else if (section === "mentor") {
-      setRole("MENTOR");
-    }
-  }, [paths]);
-
-
-
-
-  const [updateProfileStatus] = useUpdateProfileStatusMutation();
+  const [updateSyndicateStatus] = useUpdateSyndicateStatusMutation();
 
   const handleUpdateProfileStatus = async ({ status }: { status: string }) => {
-    const response = await updateProfileStatus({ id: paths[paths.length - 1], status: status, role, reason, description: enterText, documents: [relatedDocumentsKey[0]] });
-    console.log(response);
-    setIsRejectModalOpen(false);
+    try {
+      const response = await updateSyndicateStatus({
+        id: paths[paths.length - 1],
+        status: status,
+        reason,
+        description: enterText,
+        documents: relatedDocumentsKey
+      });
+      console.log(response);
+      setIsRejectModalOpen(false);
+    } catch (error) {
+      console.error("Error updating syndicate status:", error);
+    }
   }
 
 

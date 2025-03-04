@@ -10,7 +10,7 @@ import {
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, {  useEffect } from "react";
 
 type Syndicate = {
   id: string;
@@ -30,7 +30,11 @@ interface Props {
 
 const SyndicateTable: React.FC<Props> = ({ page, pageSize }) => {
   const { pathname } = usePaths();
-  const { data, isLoading } = useGetSyndicatesQuery({ page, pageSize });
+  const { data, isLoading ,refetch } = useGetSyndicatesQuery({ page, pageSize });
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const columns: ColumnDef<Syndicate>[] = [
     {

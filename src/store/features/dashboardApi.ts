@@ -217,6 +217,15 @@ export interface SyndicateMetadata {
     profileStatus: string;
 }
 
+// Add this interface for the syndicate review request
+interface SyndicateReviewRequest {
+    id: string;
+    reason: string;
+    description: string;
+    documents: Array<{ keyId: string }>;
+    status: string;
+}
+
 const getAuthToken = () => {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('authToken');
@@ -350,6 +359,14 @@ export const dashboardApi = createApi({
         getSyndicateMetadata: builder.query<SyndicateMetadata, string>({
             query: (id) => `/dashboard/syndicate/metadata/${id}`,
         }),
+        // Add the new endpoint for syndicate review
+        updateSyndicateStatus: builder.mutation<ProfileStatusResponse, SyndicateReviewRequest>({
+            query: (data) => ({
+                url: 'dashboard/syndicate/review',
+                method: 'POST',
+                body: data
+            })
+        }),
     }),
 })
 
@@ -366,4 +383,6 @@ export const { useGetDashboardStatsQuery,
     useUpdateDealStatusMutation,
     useUpdatePledgeMutation,
     useGetSyndicatesQuery,
-    useGetSyndicateMetadataQuery } = dashboardApi   
+    useGetSyndicateMetadataQuery,
+    useUpdateSyndicateStatusMutation,
+} = dashboardApi   
