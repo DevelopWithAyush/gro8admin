@@ -1,150 +1,101 @@
 // components/SyndicateTable.tsx
-import React from "react";
+import { usePaths } from "@/hooks/user-nav";
+import { useGetSyndicatesQuery } from "@/store/features/dashboardApi";
 import {
-  useReactTable,
-  getCoreRowModel,
   ColumnDef,
   flexRender,
+  getCoreRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
-import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
-import { usePaths } from "@/hooks/user-nav";
+import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
-type User = {
+type Syndicate = {
+  id: string;
+  profilePicture: string;
   name: string;
-  accountType: string;
+  founder: string;
   registrationDate: string;
-  linkedin: string;
+  investmentType: number[];
+  website: string;
   country: string;
 };
 
-const dummyData: User[] = [
-  {
-    name: "John Doe",
-    accountType: "investor",
-    registrationDate: "2023-01-15",
-    linkedin: "https://linkedin.com/in/johndoe",
-    country: "USA",
-  },
-  {
-    name: "Jane Smith",
-    accountType: "mentor",
-    registrationDate: "2023-02-10",
-    linkedin: "https://linkedin.com/in/janesmith",
-    country: "UK",
-  },
-  {
-    name: "Rahul Mehta",
-    accountType: "investor",
-    registrationDate: "2023-03-05",
-    linkedin: "https://linkedin.com/in/rahulmehta",
-    country: "India",
-  },
-  {
-    name: "Jane Smith",
-    accountType: "mentor",
-    registrationDate: "2023-02-10",
-    linkedin: "https://linkedin.com/in/janesmith",
-    country: "UK",
-  },
-  {
-    name: "Rahul Mehta",
-    accountType: "investor",
-    registrationDate: "2023-03-05",
-    linkedin: "https://linkedin.com/in/rahulmehta",
-    country: "India",
-  },
-  {
-    name: "Jane Smith",
-    accountType: "mentor",
-    registrationDate: "2023-02-10",
-    linkedin: "https://linkedin.com/in/janesmith",
-    country: "UK",
-  },
-  {
-    name: "Rahul Mehta",
-    accountType: "investor",
-    registrationDate: "2023-03-05",
-    linkedin: "https://linkedin.com/in/rahulmehta",
-    country: "India",
-  },
-];
+interface Props {
+  page: number;
+  pageSize: number;
+}
 
-const SyndicateTable: React.FC = () => {
+const SyndicateTable: React.FC<Props> = ({ page, pageSize }) => {
   const { pathname } = usePaths();
-  const isLoading = false; // Replace with actual loading logic
+  const { data, isLoading } = useGetSyndicatesQuery({ page, pageSize });
 
-  const columns: ColumnDef<User>[] = [
+  const columns: ColumnDef<Syndicate>[] = [
     {
       accessorKey: "name",
       header: "Name",
-    },
-    {
-      accessorKey: "accountType",
-      header: "Account Type",
-      cell: ({ getValue }) => {
-        return (
-          <div className="flex flex-col items-start justify-start">
-            <p
-              className={cn(
-                getValue<string>() === "investor" && "bg-[#6B9CEC]",
-                getValue<string>() === "mentor" && "bg-[#F56D6D]",
-                "px-1 py-[1px] text-[8px] font-bold leading-normal rounded-[8px] flex flex-col items-center justify-center  text-[#FEFEFE] uppercase"
-              )}
-            >
-              {getValue<string>()}
-            </p>
+      cell: ({ row }) => (
+        <div className="flex items-center gap-3">
+          <div className="relative h-10 w-10 rounded-[4px] overflow-hidden">
+            <Image
+              src={row.original.profilePicture || "/images/profile1.png"}
+              alt={row.original.name}
+              fill
+              className="object-cover"
+            />
           </div>
-        );
-      },
+          <span>{row.original.name}</span>
+        </div>
+      )
     },
     {
-      accessorKey: "registrationDate",
-      header: "Registration Date",
-    },
-    {
-      accessorKey: "linkedin",
-      header: "LinkedIn Account",
-      cell: ({ getValue }) => (
-        <a
-          href={getValue<string>()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-500 hover:underline"
-        >
-          View
-        </a>
-      ),
+      accessorKey: "founder",
+      header: "Founder",
     },
     {
       accessorKey: "country",
       header: "Country",
     },
     {
+      accessorKey: "website",
+      header: "Website",
+      cell: ({ row }) => (
+        <a
+          href={row.original.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline"
+        >
+          {row.original.website}
+        </a>
+      )
+    },
+    {
+      accessorKey: "registrationDate",
+      header: "Registration Date",
+      cell: ({ row }) => new Date(row.original.registrationDate).toLocaleDateString()
+    },
+    {
       id: "actions",
       header: "",
-      cell: () => (
+      cell: ({ row }) => (
         <Link
-          href={`${pathname === "/dashboard/syndicates/registrations"
-              ? "/dashboard/syndicates/registrations/1"
-              : pathname === "/dashboard/syndicates/active-syndicates"
-                ? "/dashboard/syndicates/active-syndicates/1"
-                : "dashboard/syndicates/registrations/1"
-            }`}
-          className=" flex flex-row items-center justify-start gap-2"
+          href={`${pathname}/syndicates/registrations/${row.original.id}`}
+          className="flex flex-row items-center justify-start gap-2"
         >
-          <span className="text-[16px] font-urbanist-semibold_600 ">
-            {" "}
-            View User Details
-          </span>{" "}
-          <ChevronRight className=" text-[#0061FE] w-[16px]" />
+          <span className="text-[16px] font-urbanist-semibold_600">
+            View Details
+          </span>
+          <ChevronRight className="text-[#0061FE] w-[16px]" />
         </Link>
       ),
     },
   ];
+
   const table = useReactTable({
-    data: dummyData,
+    data: data?.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

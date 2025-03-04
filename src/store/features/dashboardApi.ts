@@ -147,6 +147,76 @@ interface DealsResponse {
     page: number;
 }
 
+interface SyndicatesResponse {
+    totalPages: number;
+    data: {
+        id: string;
+        profilePicture: string;
+        name: string;
+        founder: string;
+        registrationDate: string;
+        investmentType: number[];
+        website: string;
+        country: string;
+    }[];
+    page: number;
+}
+
+export interface SyndicateMetadata {
+    profile: {
+        primaryDetails: {
+            syndicateName: string;
+            typeOfInvestmentsOffered: number[];
+            ownerName: string;
+            website: string;
+            country: string;
+            state: string;
+            city: string;
+            pincode: string;
+            roundBeginningDate: string;
+            roundEndDate: string;
+            investmentTransactionType: string;
+            instrumentUsed: string;
+            currentInvestmentRound: string;
+            roundSize: number;
+            valuation: number;
+            minimumInvestmentAmount: number;
+            syndicateTNA: {
+                keyId: string;
+                imageUri: string;
+            };
+            syndicatePRRights: {
+                keyId: string;
+                imageUri: string;
+            };
+            syndicateMemo: {
+                keyId: string;
+                imageUri: string;
+            };
+            syndicateRND: {
+                keyId: string;
+                imageUri: string;
+            };
+        };
+        investorDetails: Array<{
+            investorName: string;
+            investedAmount: number;
+            linkedinUrl: string;
+            hasSignedAgreementWith888vc: boolean;
+        }>;
+        syndicateCoreDetails: {
+            gstinNumber: string;
+            sebiDraftOfferDocNo: string;
+            syndicateDescription: string;
+            targetCustomersBasedIn: number;
+        };
+    };
+    firstName: string;
+    lastName: string;
+    email: string;
+    profileStatus: string;
+}
+
 const getAuthToken = () => {
     if (typeof window === 'undefined') return null;
     return localStorage.getItem('authToken');
@@ -274,7 +344,26 @@ export const dashboardApi = createApi({
                 }
             },
         }),
+        getSyndicates: builder.query<SyndicatesResponse, { page: number; pageSize: number }>({
+            query: ({ page, pageSize }) => `/dashboard/registrations/syndicate?page=${page}&pageSize=${pageSize}`,
+        }),
+        getSyndicateMetadata: builder.query<SyndicateMetadata, string>({
+            query: (id) => `/dashboard/syndicate/metadata/${id}`,
+        }),
     }),
 })
 
-export const { useGetDashboardStatsQuery, useGetInvestorRegistrationsQuery, useGetMentorRegistrationsQuery, useGetStartupRegistrationsQuery, useGetStartupMetadataQuery, useGetInvestorMetadataQuery, useUpdateProfileStatusMutation, useGetStartupRoundsQuery, useGetStartupRoundPledgesQuery, useGetDealsRegistrationsQuery, useUpdateDealStatusMutation, useUpdatePledgeMutation } = dashboardApi   
+export const { useGetDashboardStatsQuery,
+    useGetInvestorRegistrationsQuery,
+    useGetMentorRegistrationsQuery,
+    useGetStartupRegistrationsQuery,
+    useGetStartupMetadataQuery,
+    useGetInvestorMetadataQuery,
+    useUpdateProfileStatusMutation,
+    useGetStartupRoundsQuery,
+    useGetStartupRoundPledgesQuery,
+    useGetDealsRegistrationsQuery,
+    useUpdateDealStatusMutation,
+    useUpdatePledgeMutation,
+    useGetSyndicatesQuery,
+    useGetSyndicateMetadataQuery } = dashboardApi   

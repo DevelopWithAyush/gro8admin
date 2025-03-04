@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import PrimaryDetails from "./PrimaryDetails";
 import InvestorDetails from "./InvestorDetails";
 import SyndicatesDetails from "./SyndicatesDetails";
+import { SyndicateMetadata } from '@/store/features/dashboardApi';
 
 type Tab = {
   id: string;
@@ -13,12 +14,13 @@ type Tab = {
 
 const SyndicateTabs = ({
   containerClassName,
-
   tabClassName,
+  data
 }: {
   containerClassName?: string;
   tabClassName?: string;
   contentClassName?: string;
+  data?: SyndicateMetadata;
 }) => {
   const propTabs = [
     { id: "primary", label: "Primary Details" },
@@ -86,9 +88,9 @@ const SyndicateTabs = ({
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        {active.id === "primary" && <PrimaryDetails />}
-        {active.id === "investor" && <InvestorDetails />}
-        {active.id === "syndicate" && <SyndicatesDetails />}
+        {active.id === "primary" && <PrimaryDetails data={data} />}
+        {active.id === "investor" && <InvestorDetails data={data} />}
+        {active.id === "syndicate" && <SyndicatesDetails data={data} />}
       </motion.div>
     </div>
   );
