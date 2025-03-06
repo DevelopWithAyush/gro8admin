@@ -20,7 +20,7 @@ const UserInvestorProfileSection = ({ data }: UserProfileSectionProps) => {
         />
         <div className="flex flex-col items-start justify-start gap-2">
           <p className="text-[31px] font-urbanist-semibold_600 text-[#383838] leading-normal ">
-            {data.profile.investorProfile.investorKyc.firstName} {data.profile.investorProfile.investorKyc.lastName}
+            {data?.profile?.investorProfile?.investorKyc?.firstName} {data?.profile?.investorProfile?.investorKyc?.lastName}
           </p>
           <div className="flex flex-col items-start justify-start gap-[1px]">
             <p className="text-[12px] leading-normal text-[#838D96] font-rubik-light_300">

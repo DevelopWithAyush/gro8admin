@@ -1,5 +1,4 @@
 // components/SyndicateTable.tsx
-import { usePaths } from "@/hooks/user-nav";
 import { useGetSyndicatesQuery } from "@/store/features/dashboardApi";
 import {
   ColumnDef,
@@ -29,7 +28,6 @@ interface Props {
 }
 
 const SyndicateTable: React.FC<Props> = ({ page, pageSize }) => {
-  const { pathname } = usePaths();
   const { data, isLoading ,refetch } = useGetSyndicatesQuery({ page, pageSize });
 
   useEffect(() => {
@@ -86,7 +84,7 @@ const SyndicateTable: React.FC<Props> = ({ page, pageSize }) => {
       header: "",
       cell: ({ row }) => (
         <Link
-          href={`${pathname}/syndicates/registrations/${row.original.id}`}
+          href={`/dashboard/syndicates/registrations/${row.original.id}`} 
           className="flex flex-row items-center justify-start gap-2"
         >
           <span className="text-[16px] font-urbanist-semibold_600">
