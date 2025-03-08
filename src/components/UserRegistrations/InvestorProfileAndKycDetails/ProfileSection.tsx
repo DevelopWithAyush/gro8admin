@@ -48,7 +48,7 @@ const ProfileSection = ({ data }: { data: ProfileData }) => {
       <div className="col-span-2 flex flex-col gap-1">
         <p>Industry Preference</p>
         <div className="flex flex-row gap-x-2">
-          {profile.industryPreferences.map((industry, index) => (
+          {profile?.industryPreferences?.map((industry, index) => (
             <p
               key={index}
               className="px-[9px] py-[7px] rounded-[16.5px] bg-[#757A94] text-[12px] font-rubik-regular_400 text-[#FFF]"
