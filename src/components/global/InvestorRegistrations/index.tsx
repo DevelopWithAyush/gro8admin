@@ -1,13 +1,14 @@
 "use client";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import InvestorTable from "./InvestorTable";
 import { usePaths } from "@/hooks/user-nav";
 import { useGetInvestorRegistrationsQuery } from "@/store/features/dashboardApi";
-import InvestroTableLoader from "./InvestroTableLoader";
-import { useEffect } from "react";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import CustomPagination from "../CustomPagination";
+import InvestorTable from "./InvestorTable";
+import InvestroTableLoader from "./InvestroTableLoader";
 
 const getErrorMessage = (
   error: FetchBaseQueryError | SerializedError | undefined
@@ -25,6 +26,9 @@ const InvestorRegistrations = () => {
   const { pathname } = usePaths();
   const isInvestorList = pathname === "/dashboard/investor/registrations";
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
   const {
     data: investorResponse,
     isLoading,
@@ -32,21 +36,23 @@ const InvestorRegistrations = () => {
     refetch,
   } = useGetInvestorRegistrationsQuery(
     {
-      page: 1, // You can manage pagination state here
-      pageSize: 10,
+      page: currentPage,
+      pageSize,
     },
     {
       skip: typeof window === "undefined",
     }
-    );
-  
-  
-  useEffect(()=>{
-    refetch()
-  }, [refetch])
-  
+  );
 
+  useEffect(() => {
+    refetch();
+  }, [refetch, currentPage]);
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  console.log(investorResponse?.totalPages, ">>>total page")
 
   return (
     <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
@@ -75,13 +81,15 @@ const InvestorRegistrations = () => {
       ) : (
         <InvestorTable data={investorResponse?.data || []} />
       )}
-      {isInvestorList ? (
+      {isInvestorList && investorResponse?.totalPages ? (
         <div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600">
-          pagination
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={investorResponse.totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };

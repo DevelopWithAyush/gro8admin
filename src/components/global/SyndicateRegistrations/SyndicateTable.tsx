@@ -1,5 +1,4 @@
 // components/SyndicateTable.tsx
-import { useGetSyndicatesQuery } from "@/store/features/dashboardApi";
 import {
   ColumnDef,
   flexRender,
@@ -9,7 +8,7 @@ import {
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React, {  useEffect } from "react";
+import React from "react";
 
 type Syndicate = {
   id: string;
@@ -22,18 +21,11 @@ type Syndicate = {
   country: string;
 };
 
-interface Props {
-  page: number;
-  pageSize: number;
+interface SyndicateTableProps {
+  data: Syndicate[];
 }
 
-const SyndicateTable: React.FC<Props> = ({ page, pageSize }) => {
-  const { data, isLoading ,refetch } = useGetSyndicatesQuery({ page, pageSize });
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
+const SyndicateTable: React.FC<SyndicateTableProps> = ({ data }) => {
   const columns: ColumnDef<Syndicate>[] = [
     {
       accessorKey: "name",
@@ -84,7 +76,7 @@ const SyndicateTable: React.FC<Props> = ({ page, pageSize }) => {
       header: "",
       cell: ({ row }) => (
         <Link
-          href={`/dashboard/syndicates/registrations/${row.original.id}`} 
+          href={`/dashboard/syndicates/registrations/${row.original.id}`}
           className="flex flex-row items-center justify-start gap-2"
         >
           <span className="text-[16px] font-urbanist-semibold_600">
@@ -97,20 +89,10 @@ const SyndicateTable: React.FC<Props> = ({ page, pageSize }) => {
   ];
 
   const table = useReactTable({
-    data: data?.data || [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  if (isLoading) {
-    return (
-      <div className="w-full p-4">
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full overflow-x-auto">

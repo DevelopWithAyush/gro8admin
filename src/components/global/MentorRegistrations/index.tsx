@@ -4,10 +4,11 @@ import Link from "next/link";
 import MentorTable from "./MentorTable";
 import { usePaths } from "@/hooks/user-nav";
 import { useGetMentorRegistrationsQuery } from "@/store/features/dashboardApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { SerializedError } from "@reduxjs/toolkit";
 import MentorTableLoader from "./MentorTableLoader";
+import CustomPagination from "../CustomPagination";
 
 
 const getErrorMessage = (
@@ -26,17 +27,20 @@ const getErrorMessage = (
 const MentorRegistrations = () => {
   const { pathname } = usePaths();
 
-  const isMentorList = pathname === "/dashboard/mentor/registrations";  
+  const isMentorList = pathname === "/dashboard/mentor/registrations";
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   const {
     data: mentorResponse,
     isLoading,
     error: mentorError,
     refetch,
-  } = useGetMentorRegistrationsQuery( 
+  } = useGetMentorRegistrationsQuery(
     {
-      page: 1,
-      pageSize: 10,
+      page: currentPage,
+      pageSize,
     },
     {
       skip: typeof window === "undefined",
@@ -45,7 +49,11 @@ const MentorRegistrations = () => {
 
   useEffect(() => {
     refetch();
-  }, [refetch]);
+  }, [refetch, currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
@@ -72,13 +80,17 @@ const MentorRegistrations = () => {
           {getErrorMessage(mentorError)}
         </div>
       ) : (
-          <MentorTable data={mentorResponse?.data || []} />
+        <MentorTable data={mentorResponse?.data || []} />
       )}
-      {isMentorList ? (
-        <div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600 ">pagination</div>
-      ) : (
-        <></>
-      )}
+      {isMentorList && mentorResponse?.totalPages ? (
+        <div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600">
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={mentorResponse.totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      ) : null}
 
     </div>
   );

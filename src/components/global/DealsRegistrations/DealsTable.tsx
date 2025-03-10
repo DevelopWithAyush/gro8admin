@@ -1,5 +1,4 @@
-// components/StartupTable.tsx
-import { useGetDealsRegistrationsQuery } from "@/store/features/dashboardApi";
+// components/DealsTable.tsx
 import {
   ColumnDef,
   flexRender,
@@ -9,7 +8,6 @@ import {
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
 
 type Deal = {
   id: string;
@@ -26,16 +24,11 @@ type Deal = {
   status: string;
 };
 
-const DealsTable = () => {
-  const { data: dealsData, isLoading, refetch } = useGetDealsRegistrationsQuery({
-    page: 1,
-    pageSize: 10,
-  });
+interface DealsTableProps {
+  data: Deal[];
+}
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
+const DealsTable = ({ data }: DealsTableProps) => {
   const columns: ColumnDef<Deal>[] = [
     {
       accessorFn: (row) => `${row.avatar} ${row.startupName}`,
@@ -111,20 +104,10 @@ const DealsTable = () => {
   ];
 
   const table = useReactTable({
-    data: dealsData?.data || [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  if (isLoading) {
-    return (
-      <div className="w-full p-4">
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full overflow-x-auto">

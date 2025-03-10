@@ -1,6 +1,5 @@
 // components/StartupTable.tsx
 import { usePaths } from "@/hooks/user-nav";
-import { useGetStartupRegistrationsQuery } from "@/store/features/dashboardApi";
 import {
   ColumnDef,
   flexRender,
@@ -10,7 +9,6 @@ import {
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
 
 type Startup = {
   id: string;
@@ -24,23 +22,17 @@ type Startup = {
   profilePicture: string;
 };
 
-const StartupTable = () => {
+interface StartupTableProps {
+  data: Startup[];
+}
+
+const StartupTable = ({ data }: StartupTableProps) => {
   const { pathname } = usePaths();
-  const { data: startupData, isLoading, refetch } = useGetStartupRegistrationsQuery({
-    page: 1,
-    pageSize: 10,
-  });
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  
 
   const columns: ColumnDef<Startup>[] = [
     {
       accessorFn: (row) => `${row.profilePicture} ${row.name}`,
-      header: "Name", 
+      header: "Name",
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10 rounded-[4px] overflow-hidden">
@@ -53,7 +45,7 @@ const StartupTable = () => {
           </div>
           <span>{row.original.name}</span>
         </div>
-      ),  
+      ),
     },
     {
       accessorKey: "founder",
@@ -113,20 +105,10 @@ const StartupTable = () => {
   ];
 
   const table = useReactTable({
-    data: startupData?.data || [],
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-
-  if (isLoading) {
-    return (
-      <div className="w-full p-4">
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-        <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full overflow-x-auto">
