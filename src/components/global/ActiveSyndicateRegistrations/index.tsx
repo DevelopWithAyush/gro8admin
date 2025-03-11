@@ -1,11 +1,10 @@
 "use client";
-import { useGetInvestorManagementQuery } from "@/store/features/managementApi";
+import { useGetSyndicateManagementQuery } from "@/store/features/managementApi";
 import { SerializedError } from "@reduxjs/toolkit";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useEffect, useState } from "react";
 import CustomPagination from "../CustomPagination";
-import InvestroTableLoader from "../InvestorRegistrations/InvestroTableLoader";
-import InvestorManagementTable from "./InvestorManagementTable";
+import ActiveSyndicateTable from "./ActiveSyndicateTable";
 
 const getErrorMessage = (
     error: FetchBaseQueryError | SerializedError | undefined
@@ -19,19 +18,16 @@ const getErrorMessage = (
     return error.message || "Unknown error occurred";
 };
 
-const InvestorManagement = () => {
-    // const { pathname } = usePaths();
-    // const isInvestorManagement = pathname === "/dashboard/investor/management";
-
+const ActiveSyndicateRegistrations = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
 
     const {
-        data: investorResponse,
+        data: syndicateResponse,
         isLoading,
-        error: investorError,
+        error: syndicateError,
         refetch,
-    } = useGetInvestorManagementQuery(
+    } = useGetSyndicateManagementQuery(
         {
             page: currentPage,
             pageSize,
@@ -53,23 +49,29 @@ const InvestorManagement = () => {
         <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
             <div className="flex flex-row items-center justify-between w-full">
                 <p className="text-[#26252F] font-urbanist-regular_400 leading-[110%] text-[25px]">
-                    Investor Management
+                    Syndicate Management
                 </p>
             </div>
+
             {isLoading ? (
-                <InvestroTableLoader />
-            ) : investorError ? (
+                <div className="w-full p-4">
+                    <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+                    <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+                    <div className="h-10 bg-gray-200 animate-pulse rounded-md mb-2"></div>
+                </div>
+            ) : syndicateError ? (
                 <div className="w-full p-4 text-center text-red-500">
-                    {getErrorMessage(investorError)}
+                    {getErrorMessage(syndicateError)}
                 </div>
             ) : (
-                <InvestorManagementTable data={investorResponse?.data || []} />
+                <ActiveSyndicateTable data={syndicateResponse?.data || []} />
             )}
-            {investorResponse?.totalPages ? (
+
+            {syndicateResponse?.totalPages ? (
                 <div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600">
                     <CustomPagination
                         currentPage={currentPage}
-                        totalPages={investorResponse.totalPages}
+                        totalPages={syndicateResponse.totalPages}
                         onPageChange={handlePageChange}
                     />
                 </div>
@@ -78,4 +80,4 @@ const InvestorManagement = () => {
     );
 };
 
-export default InvestorManagement;
+export default ActiveSyndicateRegistrations;

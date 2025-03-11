@@ -22,17 +22,7 @@ type User = {
   country: string;
 };
 
-// const getErrorMessage = (
-//   error: FetchBaseQueryError | SerializedError | undefined
-// ) => {
-//   if (!error) return "Unknown error occurred";
 
-//   if ("status" in error) {
-//     return `Error: ${error.status} - ${error.data || "Unknown error"}`;
-//   }
-
-//   return error.message || "Unknown error occurred";
-// };
 
 const InvestorTable = ({ data }: { data: User[] }) => {
   const pathname = usePathname();

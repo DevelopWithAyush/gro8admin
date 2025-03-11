@@ -1,11 +1,17 @@
 "use client";
-import { useGetInvestorManagementQuery } from "@/store/features/managementApi";
-import { SerializedError } from "@reduxjs/toolkit";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+
+import { usePaths } from "@/hooks/user-nav";
+import { useGetMentorManagementQuery } from "@/store/features/managementApi";
 import { useEffect, useState } from "react";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { SerializedError } from "@reduxjs/toolkit";
+
 import CustomPagination from "../CustomPagination";
-import InvestroTableLoader from "../InvestorRegistrations/InvestroTableLoader";
-import InvestorManagementTable from "./InvestorManagementTable";
+import MentorManagementTable from "./MentorManagementTable";
+import MentorTableLoader from "../MentorRegistrations/MentorTableLoader";
+
 
 const getErrorMessage = (
     error: FetchBaseQueryError | SerializedError | undefined
@@ -19,19 +25,21 @@ const getErrorMessage = (
     return error.message || "Unknown error occurred";
 };
 
-const InvestorManagement = () => {
-    // const { pathname } = usePaths();
-    // const isInvestorManagement = pathname === "/dashboard/investor/management";
+
+const MentorManagement = () => {
+    const { pathname } = usePaths();
+
+    const isMentorList = pathname === "/dashboard/mentor/management";
 
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
 
     const {
-        data: investorResponse,
+        data: mentorResponse,
         isLoading,
-        error: investorError,
+        error: mentorError,
         refetch,
-    } = useGetInvestorManagementQuery(
+    } = useGetMentorManagementQuery(
         {
             page: currentPage,
             pageSize,
@@ -53,29 +61,41 @@ const InvestorManagement = () => {
         <div className="p-5 bg-[#FFF] flex flex-col items-start justify-start gap-3 border border-solid border-[#E8E8F1] rounded-[12px] w-full">
             <div className="flex flex-row items-center justify-between w-full">
                 <p className="text-[#26252F] font-urbanist-regular_400 leading-[110%] text-[25px]">
-                    Investor Management
+                    Mentor Management
                 </p>
+                {isMentorList ? (
+                    <></>
+                ) : (
+                    <Link
+                        href="/dashboard/mentor/registrations"
+                        className="px-[15px] py-[11px] text-[#000] font-urbanist-semibold_600 text-[16px] flex flex-row capitalize gap-[10px]"
+                    >
+                        <span>view all Mentor</span>
+                        <ChevronRight className="w-[16px] text-[#0061FE]" />
+                    </Link>
+                )}
             </div>
             {isLoading ? (
-                <InvestroTableLoader />
-            ) : investorError ? (
+                <MentorTableLoader />
+            ) : mentorError ? (
                 <div className="w-full p-4 text-center text-red-500">
-                    {getErrorMessage(investorError)}
+                    {getErrorMessage(mentorError)}
                 </div>
             ) : (
-                <InvestorManagementTable data={investorResponse?.data || []} />
+                <MentorManagementTable data={mentorResponse?.data || []} />
             )}
-            {investorResponse?.totalPages ? (
+            {isMentorList &&   (
                 <div className="flex flex-row items-end justify-end w-full font-rubik-semibold_600">
                     <CustomPagination
                         currentPage={currentPage}
-                        totalPages={investorResponse.totalPages}
+                        totalPages={mentorResponse?.totalPages || 0}
                         onPageChange={handlePageChange}
                     />
                 </div>
-            ) : null}
+            ) }
+
         </div>
     );
 };
 
-export default InvestorManagement;
+export default MentorManagement;
